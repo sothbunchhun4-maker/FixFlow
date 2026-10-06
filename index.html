@@ -1,0 +1,2085 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FixFlow — Next-Gen Equipment Maintenance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'Noto Sans Khmer', 'system-ui', 'sans-serif'] },
+            colors: {
+              navy: { 950: '#050810', 900: '#070a14', 850: '#0a0f1c', 800: '#0d1322', 750: '#111a30', 700: '#16203b', 600: '#1e2a4a' },
+              accent: { 50: '#ecfeff', 100: '#cffafe', 200: '#a5f3fc', 300: '#67e8f9', 400: '#22d3ee', 500: '#06b6d4', 600: '#0891b2', 700: '#0e7490' },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      * { font-family: 'Inter', 'Noto Sans Khmer', system-ui, sans-serif; }
+      body { background: #070a14; color: #e2e8f0; overflow-x: hidden; }
+
+      .glass { background: rgba(13, 19, 34, 0.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(6, 182, 212, 0.12); }
+      .glass-strong { background: rgba(10, 15, 28, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(6, 182, 212, 0.18); }
+      .neon-glow { box-shadow: 0 0 24px rgba(6, 182, 212, 0.25), 0 0 48px rgba(6, 182, 212, 0.08); }
+      .neon-text { text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+      .gradient-text { background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+      .gradient-border { position: relative; }
+      .gradient-border::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(135deg, rgba(6, 182, 212, 0.4), rgba(59, 130, 246, 0.1)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+      .grid-bg { background-image: linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px); background-size: 50px 50px; }
+      .radial-glow { background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(6, 182, 212, 0.12), transparent); }
+
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+      @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+      @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); } 70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+      @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
+      @keyframes bellRing { 0%, 100% { transform: rotate(0); } 15% { transform: rotate(14deg); } 30% { transform: rotate(-14deg); } 45% { transform: rotate(10deg); } 60% { transform: rotate(-10deg); } 75% { transform: rotate(6deg); } }
+      @keyframes scanLine { 0% { transform: translateY(0); opacity: 0.8; } 100% { transform: translateY(200px); opacity: 0; } }
+      @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+      @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); } 50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.5); } }
+      @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+      @keyframes dash { to { stroke-dashoffset: -20; } }
+      @keyframes typingDot { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
+      @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+      @keyframes floatParticle { 0% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; } 100% { transform: translateY(-120px) translateX(20px); opacity: 0; } }
+      @keyframes slideInLeft { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+
+      .anim-fade-in { animation: fadeIn 0.6s ease-out both; }
+      .anim-fade-scale { animation: fadeInScale 0.4s ease-out both; }
+      .anim-slide-up { animation: slideUp 0.5s ease-out both; }
+      .anim-slide-right { animation: slideInRight 0.4s ease-out both; }
+      .anim-float { animation: floatY 4s ease-in-out infinite; }
+      .anim-pulse-ring { animation: pulseRing 2s ease-out infinite; }
+      .anim-pulse-dot { animation: pulseDot 1.5s ease-in-out infinite; }
+      .anim-gradient { background-size: 200% 200%; animation: gradientShift 4s ease infinite; }
+      .anim-slide-left { animation: slideInLeft 0.5s ease-out both; }
+      .anim-bell { animation: bellRing 1.5s ease-in-out infinite; transform-origin: top center; }
+      .anim-spin { animation: spin 8s linear infinite; }
+      .anim-glow { animation: glowPulse 3s ease-in-out infinite; }
+      .anim-dash { stroke-dasharray: 5 5; animation: dash 1s linear infinite; }
+      @keyframes kenBurns { 0% { transform: scale(1) translate(0,0); } 50% { transform: scale(1.08) translate(-10px,-5px); } 100% { transform: scale(1) translate(0,0); } }
+      @keyframes scanOverlay { 0% { transform: translateY(-120%); opacity:0; } 50% { opacity:0.7; } 100% { transform: translateY(120%); opacity:0; } }
+      @keyframes shimmerBg { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+      @keyframes glowPulse2 { 0%, 100% { box-shadow: 0 0 12px rgba(6,182,212,0.2); } 50% { box-shadow: 0 0 28px rgba(6,182,212,0.4); } }
+      @keyframes floatDot { 0% { transform: translateY(0) scale(1); opacity:0.6; } 50% { transform: translateY(-20px) scale(1.2); opacity:1; } 100% { transform: translateY(0) scale(1); opacity:0.6; } }
+      .anim-ken-burns { animation: kenBurns 12s ease-in-out infinite; }
+      .anim-scan-overlay { position: absolute; left: 0; right: 0; height: 60px; background: linear-gradient(180deg, transparent, rgba(6,182,212,0.25), transparent); animation: scanOverlay 3s ease-in-out infinite; pointer-events: none; }
+      .shimmer-text { background: linear-gradient(90deg, #22d3ee, #3b82f6, #22d3ee); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmerBg 3s linear infinite; }
+      .anim-glow2 { animation: glowPulse2 3s ease-in-out infinite; }
+      .anim-float-dot { animation: floatDot 4s ease-in-out infinite; }
+      .photo-overlay { background: linear-gradient(180deg, rgba(7,10,20,0.1) 0%, rgba(7,10,20,0.3) 50%, rgba(7,10,20,0.85) 100%); }
+      .photo-overlay-left { background: linear-gradient(135deg, rgba(7,10,20,0.85) 0%, rgba(7,10,20,0.2) 60%, transparent 100%); }
+
+      .stagger > * { opacity: 0; animation: fadeIn 0.5s ease-out forwards; }
+      .stagger > *:nth-child(1) { animation-delay: 0.05s; }
+      .stagger > *:nth-child(2) { animation-delay: 0.15s; }
+      .stagger > *:nth-child(3) { animation-delay: 0.25s; }
+      .stagger > *:nth-child(4) { animation-delay: 0.35s; }
+      .stagger > *:nth-child(5) { animation-delay: 0.45s; }
+      .stagger > *:nth-child(6) { animation-delay: 0.55s; }
+      .stagger > *:nth-child(7) { animation-delay: 0.65s; }
+      .stagger > *:nth-child(8) { animation-delay: 0.75s; }
+
+      .btn-primary { background: linear-gradient(135deg, #06b6d4, #3b82f6, #06b6d4); background-size: 200% 200%; color: #fff; transition: all 0.25s; box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3); animation: gradientShift 4s ease infinite; }
+      .btn-primary:hover { box-shadow: 0 6px 30px rgba(6, 182, 212, 0.5); transform: translateY(-1px); }
+      .btn-ghost { background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2); color: #67e8f9; transition: all 0.25s; }
+      .btn-ghost:hover { background: rgba(6, 182, 212, 0.15); border-color: rgba(6, 182, 212, 0.4); }
+      .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; transition: all 0.25s; }
+      .btn-danger:hover { box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4); transform: translateY(-1px); }
+
+      .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+      .status-dispatched { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+      .status-progress { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+      .status-completed { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+      .status-negotiating { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #0a0f1c; }
+      ::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.2); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.4); }
+
+      .modal-backdrop { background: rgba(5, 8, 16, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+      input[type="text"], input[type="number"], textarea, select {
+        background: rgba(10, 15, 28, 0.8); border: 1px solid rgba(6, 182, 212, 0.15); color: #e2e8f0;
+        border-radius: 10px; padding: 10px 14px; transition: border-color 0.2s; width: 100%;
+      }
+      input:focus, textarea:focus, select:focus { outline: none; border-color: rgba(6, 182, 212, 0.5); box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1); }
+      input::placeholder, textarea::placeholder { color: #475569; }
+
+      .tab-active { color: #22d3ee; border-bottom: 2px solid #06b6d4; }
+      .tab-inactive { color: #64748b; border-bottom: 2px solid transparent; }
+    </style>
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+</head>
+  <body>
+    <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-[70] hidden"></canvas>
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[65] space-y-3 pointer-events-none w-80 max-w-[calc(100vw-3rem)]"></div>
+    <div id="app-root"></div>
+    <div id="modal-root" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4"></div>
+
+    <script>
+    // ════════════════════════════════════════════════════════════════
+    // FIXFLOW — Single-File Equipment Repair Management
+    // ════════════════════════════════════════════════════════════════
+
+    // ─── STATE ───
+    let state = {
+      page: 'landing',
+      role: null,
+      tickets: [],
+      activeChat: null,
+dispatchStep: 1,
+      dispatchTicketId: null,
+      dispatchType: null,
+      selectedCompany: null,
+    };
+
+    // ─── I18N ───
+    let lang = 'en';
+    const translations = {
+      en: {
+        launch_app: 'Launch App', launch: 'Launch',
+        next_gen_maintenance: 'Next-Gen Equipment Maintenance',
+        hero_title_1: 'Instant Repair Management', hero_title_2: 'AI Photo Powered',
+        hero_desc: "FixFlow streamlines equipment repair workflows for Phnom Penh's modern workspaces and cafés. Report issues with AI photo recognition, dispatch in-house or outside technicians, and track repairs in real time.",
+        enter_platform: 'Enter Platform Now', view_guide: 'View User Guide',
+        ai_scan_active: 'AI Scan Active', live_feed: 'Live Feed', active_alerts: 'Active Alerts',
+        live_ai_recognition: 'Live AI Recognition', match_confidence: 'Match Confidence', ai_matched_espresso: 'Active — Espresso Machine #04 matched',
+        designed_for: 'Designed for Modern Workspaces & Cafés', designed_desc: 'From commercial kitchens to server rooms, FixFlow adapts to your equipment maintenance needs.',
+        cafe_restaurant: 'Café & Restaurant', cafe_desc: 'Commercial espresso machines, ovens, refrigerators and kitchen equipment',
+        ai_photo_scan: 'AI Photo Scan', ai_photo_scan_desc: 'Report issues instantly via AI-powered photo recognition',
+        phnom_penh_experts: 'Phnom Penh Experts', pp_experts_desc: 'In-house technicians and vetted outside contractors across all districts',
+        platform_overview: 'Platform Overview', about_fixflow: 'About', about_desc: "A complete repair management ecosystem built for Phnom Penh's growing café, restaurant, and commercial workspace industry.",
+        ai_photo_recognition: 'AI Photo Recognition', snap_photo_title: 'Snap a photo — AI identifies the equipment', snap_photo_desc: "Staff simply take a photo of the broken equipment. FixFlow's AI engine instantly identifies the make and model, matches it against the asset database, and auto-fills the repair ticket — no manual lookup needed.",
+        smart_dispatch: 'Smart Dispatch', choose_contractor_title: 'Choose in-house or outside contractors', choose_contractor_desc: 'Managers dispatch repairs with a single click. In-house technicians are 100% free. Outside contractors offer competitive pricing with live negotiation — both tracked with real-time countdown timers.',
+        user_roles: 'User Roles', user_roles_sub: 'Staff, Manager, In-House Tech, Contractor',
+        inhouse_techs: 'In-House Techs', inhouse_techs_sub: 'Khmer-named, rated, skilled',
+        contractor_companies: 'Contractor Companies', contractor_sub: 'BKK1, Toul Kork, Daun Penh, Sen Sok',
+        report_method: 'Report Method', report_method_sub: 'AI Photo Recognition',
+        ai_photo_feat: 'AI Photo Recognition', ai_photo_feat_desc: 'Upload or snap a photo. AI matches equipment with 99%+ confidence and auto-creates the ticket.',
+        smart_dispatch_feat: 'Smart Dispatch', smart_dispatch_feat_desc: 'In-house (free) or outside contractor with live price negotiation and acceptance flow.',
+        live_timer: 'Live Timer Tracking', live_timer_desc: 'Technician badge turns red with a live countdown. Every second is tracked from dispatch to completion.',
+        realtime_chat: 'Real-Time Chat', realtime_chat_desc: 'Manager and technician chat live. Negotiate prices, share updates, and coordinate repairs.',
+        proof_history: 'Proof & History', proof_history_desc: 'Technicians upload proof photos. Completed jobs are archived with full history and confetti celebration.',
+        server_room_cooling: 'Server Room Cooling', server_room_desc: 'AC failure in data centers — temperature alerts dispatched instantly.',
+        espresso_repair: 'Espresso Machine Repair', espresso_repair_desc: 'Group head issues, pressure loss — matched by AI at 99.4% confidence.',
+        expert_techs: 'Expert Technicians', expert_techs_desc: 'Rated in-house staff and vetted contractors across Phnom Penh districts.',
+        critical_alert: 'Critical Alert', pending_repair: 'Pending Repair', in_progress: 'In Progress',
+        real_work: 'Real Work, Real Results', see_action: 'See FixFlow in Action', gallery_desc: 'From bustling cafes to precision equipment repair — our platform keeps Phnom Penh running.',
+        precision_repair: 'Precision Repair', precision_desc: 'Skilled technicians diagnose and fix equipment on the spot',
+        cafe_equipment: 'Cafe Equipment', cafe_equipment_desc: 'Espresso machines serviced and back online in minutes',
+        electronics_workbench: 'Electronics Workbench', electronics_desc: 'Component-level repair by certified in-house techs',
+        modern_workspaces: 'Modern Workspaces', modern_desc: 'Beautiful cafes and offices powered by FixFlow',
+        on_site_service: 'On-Site Service', on_site_desc: 'Contractors arrive equipped and ready to work',
+        quality_taste: 'Quality You Can Taste', quality_desc: 'Well-maintained equipment means better coffee',
+        quick_start: 'Quick Start', before_demo: 'Before You Demo', demo_desc: 'A quick walkthrough to help you get the most out of the FixFlow demo. Pick a role and explore the full repair workflow.',
+        pick_role: 'Pick a Role', pick_role_desc: 'Click "Launch App" and choose from Staff, Manager, In-House Technician, or Outside Contractor. Each role sees a different dashboard tailored to their workflow. You can switch roles anytime from the header.',
+        try_staff: 'Try the Staff View', try_staff_desc: 'Click "Report New Issue" to open the report popup. Upload any image and describe a problem — AI will identify the equipment automatically. Submit and watch your ticket appear instantly.',
+        explore_manager: 'Explore the Manager View', explore_manager_desc: 'See pending alerts with "Action Needed" ribbons. Click "Dispatch" to choose between free in-house staff or paid outside contractors. Browse 5 in-house techs and 8 companies with ratings, reviews, and pricing. Negotiate a price in the chat.',
+        complete_repair: 'Complete a Repair', complete_repair_desc: 'Switch to the In-House Technician view and click "Upload Proof & Complete" to trigger a confetti celebration. Or try the Outside Contractor view to negotiate, accept, and submit an invoice. Watch the live timer count up in real time.',
+        sample_data: 'Sample Data in This Demo', ticket_1: 'Ticket 1', ticket_2: 'Ticket 2', inhouse_team: 'In-House Team', contractors_label: 'Contractors',
+        start_demo: 'Start Demo Now', view_guideline: 'View Operational Guideline',
+        operational_guideline: 'FixFlow Operational Guideline', guideline_desc: 'Four simple steps from issue report to completed repair.',
+        report_issue: 'Report Issue', report_issue_desc: 'Staff reports a problem using AI photo recognition — just snap a photo and AI identifies the equipment.',
+        dispatch_repair: 'Dispatch Repair', dispatch_repair_desc: 'Manager chooses In-House (free) or Outside Contractor, negotiates the price, then dispatches the job.',
+        live_tracking: 'Live Tracking', live_tracking_desc: 'Technician badge turns RED with a live countdown timer. Both sides chat in real time during the repair.',
+        complete_save: 'Complete & Save', complete_save_desc: 'Technician uploads a proof photo and completes the job. The record is saved in Repair History.',
+        step: 'STEP',
+        system_online: 'System Online • Phnom Penh Hub', copyright: '© 2026 — Phnom Penh Hub',
+        repair_management: 'REPAIR MANAGEMENT',
+        home: 'Home', switch_role: 'Switch Role',
+        role_staff: 'Staff', role_manager: 'Manager', role_inhouse: 'In-House Technician', role_contractor: 'Outside Contractor',
+        staff_dashboard: 'Staff Dashboard', staff_dashboard_desc: 'Report equipment issues and track repair progress', report_new_issue: 'Report New Issue', my_reported_issues: 'My Reported Issues & Maintenance History', no_issues_reported: 'No issues reported yet. Click "Report New Issue" to get started.',
+        manager_dashboard: 'Manager Dashboard', manager_dashboard_desc: 'Monitor and dispatch repair operations across all locations',
+        pending_alerts: 'Pending Alerts', in_progress_label: 'In Progress', completed_label: 'Completed',
+        pending_repair_alerts: 'Pending Repair Alerts', action_required: 'Action Required', action_needed: 'Action Needed',
+        dispatch: 'Dispatch', chat: 'Chat', negotiate: 'Negotiate', negotiate_chat: 'Negotiate & Chat', awaiting_agreement: 'Awaiting agreement…', elapsed: 'elapsed', no_tickets: 'No tickets yet.',
+        inhouse_tech_title: 'In-House Technician', inhouse_tech_desc: 'Your active repair assignments — all services are 100% free', active_jobs: 'Active Jobs', active_jobs_label: 'Active Jobs', no_active_jobs: 'No active jobs assigned to you.', completed_jobs: 'Completed Jobs', reply_manager: 'Reply to Manager', upload_proof: 'Upload Proof & Complete', free_service: '100% FREE ($0)',
+        contractor_title: 'Outside Contractor', contractor_desc: 'Manage your contracted repair jobs and invoices', active_contracts: 'Active Contracts', no_active_contracts: 'No active contracts assigned to you.', completed_contracts: 'Completed Contracts', paid_service: 'Paid Service', accept: 'Accept', decline: 'Decline', finish_invoice: 'Finish & Invoice', chat_btn: 'Chat',
+        repairer: 'Repairer', free_label: '(Free)', completed_label_time: 'Completed',
+        select_role: 'Select Your Role', select_role_desc: 'Choose how you want to use FixFlow', staff: 'Staff', manager: 'Manager', inhouse_tech: 'In-House Technician', outside_contractor: 'Outside Contractor',
+        staff_desc: 'Report issues and track repairs', manager_desc: 'Dispatch and oversee all repairs', inhouse_desc: 'Free repair jobs assigned to you', contractor_desc: 'Paid contracts with negotiation',
+        cancel: 'Cancel', must_pick_role: 'You must pick a role to continue',
+        report_new_issue_title: 'Report New Issue', upload_photo: 'Upload or snap a photo of the equipment', click_upload: 'Click to upload or take a photo', ai_identify: 'AI will identify the equipment automatically', describe_problem: 'Describe the problem', problem_placeholder: "e.g. Machine won't heat up, making unusual noise...", submit_report: 'Submit AI Report Now',
+        dispatch_repair_title: 'Dispatch Repair', reporter: 'Reporter', method: 'Method', ai_confidence: 'AI Confidence', choose_repairer: 'Choose Repairer Type', inhouse_staff: 'In-House Staff', free_zero: '100% FREE ($0)', available: 'available', total: 'total', outside_contractor_company: 'Outside Contractor / Company', paid_negotiation: 'Paid — price negotiation', companies: 'companies', pp_areas: 'Phnom Penh areas',
+        select_inhouse_tech: 'Select In-House Technician', back: 'Back', inhouse_free: 'In-House • 100% FREE ($0)', select_contractor: 'Select Outside Contractor', contractor_paid: 'Outside Contractor • Paid', view_details: 'View Details', dispatch_btn: 'Dispatch',
+        company_details: 'Company Details', price_range: 'Price Range', contact: 'Contact', hours: 'Hours', location: 'Location', services: 'Services', reviews: 'reviews', dispatch_to: 'Dispatch to',
+        price_negotiation: 'Price Negotiation', offered: 'Offered', no_offer_yet: 'No offer yet', no_messages: 'No messages yet. Start the conversation.', propose: 'Propose', counter: 'Counter', type_message: 'Type a message...', price_offered: 'Price Offered', counter_offer: 'Counter-Offer', accepted_msg: 'Accepted — Price agreed at', declined_msg: 'Job Declined',
+        switched_to: 'Switched to', ai_report_submitted: 'AI report submitted — equipment identified at', dispatched_inhouse: 'Dispatched to', dispatched_contractor: 'Dispatched to', describe_first: 'Please describe the problem first', enter_price: 'Enter a price first', enter_counter: 'Enter a counter-offer', job_accepted: 'Job accepted at', no_price_accept: 'No price offer to accept', job_declined: 'Job declined — returned to pending queue', repair_completed: 'Repair completed and saved to history!', contract_finished: 'Contract finished — invoice submitted for',
+        status_pending: 'Pending', status_dispatched: 'Dispatched', status_in_progress: 'In Progress', status_completed: 'Completed', status_negotiating: 'Negotiating',
+        language: 'Language', just_now: 'just now', ago_m: 'm ago', ago_h: 'h ago', ago_d: 'd ago', negotiate_to_begin: '— negotiate price to begin',
+        ai_match: 'AI Match', by: 'By', agreed_price: 'Agreed Price:', confidence_suffix: '% confidence',
+        khmer_label: 'ខ្មែរ',
+      },
+      km: {
+        launch_app: 'បើកកម្មវិធី', launch: 'បើក',
+        next_gen_maintenance: 'ថែទាំឧបករណ៍ជំនាន់ថ្មី',
+        hero_title_1: 'ការគ្រប់គ្រងការស្តារហើយប្រឹក្សា ភ្លាមៗ', hero_title_2: 'ប្រព័ន្ធមើរអត្តសញ្ញាណរូបភាព AI',
+        hero_desc: 'FixFlow ធ្វើឱ្យការងារស្តារឧបករណ៍កាន់តែងងាយស្រួលសម្រាប់តំបន់ធ្វើការទំនើប និងផ្ទះកាហ្វេនៅភ្នំពេញ។ រាយការបញ្ហាដោយប្រើមើរអត្តសញ្ញាណរូបភាព AI បញ្ជូនជាងក្នុងផ្ទះ ឬអ្នកស្តារខាងក្រៅ និងតាមដានការស្តារក្នុងពេលពិតប្រាកដ។',
+        enter_platform: 'ចូលប្រព័ន្ធឥឡូវនេះ', view_guide: 'មើលមេរៀនប្រើប្រាស់',
+        ai_scan_active: 'ការស្កេន AI កំពុងដំណើរការ', live_feed: 'ផ្តល់បន្តផ្ទាល់', active_alerts: 'ការជូនដំណឹងសកម្ម',
+        live_ai_recognition: 'មើរអត្តសញ្ញាណ AI ផ្ទាល់', match_confidence: 'កម្រិតត្រូវគ្នា', ai_matched_espresso: 'សកម្ម — ម៉ាស៊ីន Espresso #04 ត្រូវបានរកឃើញ',
+        designed_for: 'រចនាសម្រាប់តំបន់ធ្វើការទំនើប និងផ្ទះកាហ្វេ', designed_desc: 'ចាប់ពីផ្ទះបាយពាណិជ្ជកម្ម ដល់បន្ទប់ម៉ាស៊ីនបម្រើ FixFlow សម្រួលតាមតម្រូវការថែទាំឧបករណ៍របស់អ្នក។',
+        cafe_restaurant: 'ផ្ទះកាហ្វេ & ភោជនីយដ្ឋាន', cafe_desc: 'ម៉ាស៊ីន Espresso ពាណិជ្ជកម្ម ឡ ចំហុយ ទូក្រោម និងឧបករណ៍ផ្ទះបាយ',
+        ai_photo_scan: 'ស្កេនរូបភាព AI', ai_photo_scan_desc: 'រាយការបញ្ហាភ្លាមៗតាមរយៈមើរអត្តសញ្ញាណរូបភាពដែលដំណើរការដោយ AI',
+        phnom_penh_experts: 'បុគ្គលិកជំនាញភ្នំពេញ', pp_experts_desc: 'ជាងក្នុងផ្ទះ និងអ្នកស្តារខាងក្រៅដែលបានផ្តិតយ៉ាងទូទៅក្នុងគ្រប់ស្រុក',
+        platform_overview: 'ទិដ្ឋភាពផ្ទៃប្រព័ន្ធ', about_fixflow: 'អំពី', about_desc: 'ប្រព័ន្ធគ្រប់គ្រងការស្តារពេញលេញសម្រាប់វិស័យផ្ទះកាហ្វេ ភោជនីយដ្ឋាន និងតំបន់ធ្វើការពាណិជ្ជកម្មនៅភ្នំពេញ។',
+        ai_photo_recognition: 'មើរអត្តសញ្ញាណរូបភាព AI', snap_photo_title: 'ថតរូបភាព — AI ស្គាល់ឧបករណ៍', snap_photo_desc: 'បុគ្គលិកគ្រាន់តែថតរូបឧបករណ៍ដែលខូច។ ម៉ាស៊ីន AI របស់ FixFlow ស្គាល់ម៉ាស៊ីន និងម៉ូដែលភ្លាមៗ ផ្គូរផ្គងនឹងមូលដ្ឋានទិន្នន័យ និងបំពេញវិក្កយបត្រស្តារដោយស្វ័យប្រវត្តិ — មិនត្រូវការស្វែងរកដោយដៃឡើយ។',
+        smart_dispatch: 'បញ្ជូនឆ្លាតវៃ', choose_contractor_title: 'ជ្រើសរើសជាងក្នុងផ្ទះ ឬអ្នកស្តារខាងក្រៅ', choose_contractor_desc: 'អ្នកគ្រប់គ្រងបញ្ជូនការស្តារដោយចុចតែមួយ។ ជាងក្នុងផ្ទះគឺឥតគិតថ្លៃ១០០%។ អ្នកស្តារខាងក្រៅផ្តល់តម្លៃប្រកួតប្រជែងជាមួយការចរចាផ្ទាល់ — ទាំងពីរត្រូវបានតាមដានដោយការរាប់ពេលវេលាផ្ទាល់។',
+        user_roles: 'តួនាទីអ្នកប្រើ', user_roles_sub: 'បុគ្គលិក អ្នកគ្រប់គ្រង ជាងក្នុងផ្ទះ អ្នកស្តារខាងក្រៅ',
+        inhouse_techs: 'ជាងក្នុងផ្ទះ', inhouse_techs_sub: 'ឈ្មោះខ្មែរ មានចំណាត់ថ្នាក់ មានជំនាញ',
+        contractor_companies: 'ក្រុមហ៊ុនអ្នកស្តារ', contractor_sub: 'BKK1 ទួលគោក ដូនពេញ សែនសុខ',
+        report_method: 'វិធីរាយការ', report_method_sub: 'មើរអត្តសញ្ញាណរូបភាព AI',
+        ai_photo_feat: 'មើរអត្តសញ្ញាណរូបភាព AI', ai_photo_feat_desc: 'បង្ហោះឬថតរូបភាព។ AI ផ្គូរផ្គងឧបករណ៍ដោយទំនុកចិត្តលើស៩៩% និងបង្កើតវិក្កយបត្រដោយស្វ័យប្រវត្តិ។',
+        smart_dispatch_feat: 'បញ្ជូនឆ្លាតវៃ', smart_dispatch_feat_desc: 'ក្នុងផ្ទះ (ឥតគិតថ្លៃ) ឬអ្នកស្តារខាងក្រៅជាមួយការចរចាតម្លៃផ្ទាល់ និងការបដិសេធ។',
+        live_timer: 'តាមដានពេលវេលាផ្ទាល់', live_timer_desc: 'ស្លាកជាងប្រែពណ៌ក្រហមជាមួយការរាប់ពេលវេលាផ្ទាល់។ រាល់វិនាទីត្រូវបានតាមដានពីការបញ្ជូនដល់ការបញ្ចប់។',
+        realtime_chat: 'ជជែកផ្ទាល់', realtime_chat_desc: 'អ្នកគ្រប់គ្រង និងជាងជជែកផ្ទាល់។ ចរចាតម្លៃ ចែករំលែកបច្ចុប្បន្នភាព និងសម្របសម្រួលការស្តារ។',
+        proof_history: 'ស្នាម & ប្រវត្តិ', proof_history_desc: 'ជាងបង្ហោះរូបភាពស្នាម។ ការងារបានបញ្ចប់ត្រូវបានទុកក្នុងប្រវត្តិពេញលេញជាមួយការអបអរ។',
+        server_room_cooling: 'ការត្រជាក់បន្ទប់ម៉ាស៊ីន', server_room_desc: 'ម៉ាស៊ីនត្រជាក់ខូចក្នុងមជ្ឈមណ្ឌលទិន្នន័យ — ការជូនដំណឹងសីតុណ្ហភាពបញ្ជូនភ្លាមៗ។',
+        espresso_repair: 'ការស្តារម៉ាស៊ីន Espresso', espresso_repair_desc: 'បញ្ហាក្បាលម៉ាស៊ីន បាត់សម្ពាធ — ផ្គូរផ្គងដោយ AI ទំនុកចិត្ត៩៩.៤%។',
+        expert_techs: 'ជាងជំនាញ', expert_techs_desc: 'បុគ្គលិកក្នុងផ្ទះមានចំណាត់ថ្នាក់ និងអ្នកស្តារបានផ្តិតក្នុងគ្រប់ស្រុកភ្នំពេញ។',
+        critical_alert: 'ការជូនដំណឹងបន្ទាន់', pending_repair: 'រង់ចាំស្តារ', in_progress: 'កំពុងដំណើរការ',
+        real_work: 'ការងារពិត លទ្ធផលពិត', see_action: 'មើល FixFlow ក្នុងសកម្មភាព', gallery_desc: 'ចាប់ពីផ្ទះកាហ្វេរវាយ ដល់ការស្តារឧបករណ៍ជាក់ស្តែង — វេទិកាយើងធ្វើឱ្យភ្នំពេញដំណើរការបន្ត។',
+        precision_repair: 'ការស្តារចំៗ', precision_desc: 'ជាងជំនាញត្រួតពិនិត្យ និងស្តារឧបករណ៍នៅលើកន្លែង',
+        cafe_equipment: 'ឧបករណ៍ផ្ទះកាហ្វេ', cafe_equipment_desc: 'ម៉ាស៊ីន Espresso បានថែទាំ និងដំណើរការវិញក្នុងរយៈពេលខ្លី',
+        electronics_workbench: 'តុការងារអេឡិចត្រូនិក', electronics_desc: 'ការស្តារកម្រិតសមាសធាតុដោយជាងក្នុងផ្ទះមានវិញ្ញាប័ត្រ',
+        modern_workspaces: 'តំបន់ធ្វើការទំនើប', modern_desc: 'ផ្ទះកាហ្វេ និងការិយាល័យស្អាតដែលដំណើរការដោយ FixFlow',
+        on_site_service: 'សេវានៅទីតាំង', on_site_desc: 'អ្នកស្តារមកដល់ជាមួយឧបករណ៍ និងត្រៀមធ្វើការ',
+        quality_taste: 'គុណភាពដែលអ្នកអាចភ្លក្ស', quality_desc: 'ឧបករណ៍ដែលបានថែទាំល្អ មានន័យថាកាហ្វេកាន់តែល្អ',
+        quick_start: 'ចាប់ផ្តើមរហ័ស', before_demo: 'មុនពេលសាកល្បង', demo_desc: 'ការណែនាំខ្លីដើម្បីជួយឱ្យអ្នកទទួលបានអតិបរមាពីការសាកល្បង FixFlow។ ជ្រើសរើសតួនាទី និងស្វែងយល់ពីវិធីស្តារពេញលេញ។',
+        pick_role: 'ជ្រើសរើសតួនាទី', pick_role_desc: 'ចុច "បើកកម្មវិធី" និងជ្រើសរើសពី បុគ្គលិក អ្នកគ្រប់គ្រង ជាងក្នុងផ្ទះ ឬអ្នកស្តារខាងក្រៅ។ តួនាទីនីមួយៗមើលឃើញផ្ទាំងគ្រប់គ្រងផ្សេងគ្នា។ អ្នកអាចប្តូរតួនាទីគ្រប់ពេលពីបរិវេណ។',
+        try_staff: 'សាកល្បងទិដ្ឋភាពបុគ្គលិក', try_staff_desc: 'ចុច "រាយការបញ្ហាថ្មី" ដើម្បីបើកផ្ទាំងរាយការ។ បង្ហោះរូបភាពណាមួយ និងពណ៌នាបញ្ហា — AI នឹងស្គាល់ឧបករណ៍ដោយស្វ័យប្រវត្តិ។ ដាក់ស្នើ និងមើលវិក្កយបត្ររបស់អ្នកបង្ហាញភ្លាមៗ។',
+        explore_manager: 'ស្វែងយល់ទិដ្ឋភាពអ្នកគ្រប់គ្រង', explore_manager_desc: 'មើលការជូនដំណឹងរង់ចាំជាមួយស្លាក "ត្រូវការសកម្មភាព"។ ចុច "បញ្ជូន" ដើម្បីជ្រើសរើសរវាងបុគ្គលិកក្នុងផ្ទះឥតគិតថ្លៃ ឬអ្នកស្តារខាងក្រៅមានថ្លៃ។ រាប់៥ជាងក្នុងផ្ទះ និង៨ក្រុមហ៊ុនជាមួយចំណាត់ថ្នាក់ និងតម្លៃ។ ចរចាតម្លៃក្នុងជជែក។',
+        complete_repair: 'បញ្ចប់ការស្តារ', complete_repair_desc: 'ប្តូរទៅទិដ្ឋភាពជាងក្នុងផ្ទះ និងចុច "បង្ហោះស្នាម & បញ្ចប់" ដើម្បីធ្វើឱ្យមានការអបអរ។ ឬសាកល្បងទិដ្ឋភាពអ្នកស្តារខាងក្រៅដើម្បីចរចា ទទួលយក និងដាក់ស្នើវិក្កយបត្រ។ មើលការរាប់ពេលវេលាផ្ទាល់។',
+        sample_data: 'ទិន្នន័យឧទាហរណ៍ក្នុងការសាកល្បងនេះ', ticket_1: 'វិក្កយបត្រ ១', ticket_2: 'វិក្កយបត្រ ២', inhouse_team: 'ក្រុមក្នុងផ្ទះ', contractors_label: 'អ្នកស្តារខាងក្រៅ',
+        start_demo: 'ចាប់ផ្តើមសាកល្បងឥឡូវនេះ', view_guideline: 'មើលគោលការណ៍ប្រតិបត្តិការ',
+        operational_guideline: 'គោលការណ៍ប្រតិបត្តិការ FixFlow', guideline_desc: '៤ជំហានសាមញ្ញពីការរាយការបញ្ហាដល់ការស្តារបានបញ្ចប់។',
+        report_issue: 'រាយការបញ្ហា', report_issue_desc: 'បុគ្គលិករាយការបញ្ហាដោយប្រើមើរអត្តសញ្ញាណរូបភាព AI — គ្រាន់តែថតរូប និង AI ស្គាល់ឧបករណ៍។',
+        dispatch_repair: 'បញ្ជូនការស្តារ', dispatch_repair_desc: 'អ្នកគ្រប់គ្រងជ្រើសរើសក្នុងផ្ទះ (ឥតគិតថ្លៃ) ឬអ្នកស្តារខាងក្រៅ ចរចាតម្លៃ រួចបញ្ជូនការងារ។',
+        live_tracking: 'តាមដានផ្ទាល់', live_tracking_desc: 'ស្លាកជាងប្រែពណ៌ក្រហមជាមួយការរាប់ពេលវេលាផ្ទាល់។ ភាគីទាំងសងខាងជជែកផ្ទាល់ក្នុងពេលស្តារ។',
+        complete_save: 'បញ្ចប់ & រក្សាទុក', complete_save_desc: 'ជាងបង្ហោះរូបភាពស្នាម និងបញ្ចប់ការងារ។ កំណត់ត្រាត្រូវបានរក្សាទុកក្នុងប្រវត្តិការស្តារ។',
+        step: 'ជំហាន',
+        system_online: 'ប្រព័ន្ធលើបណ្តាញ • មជ្ឈមណ្ឌលភ្នំពេញ', copyright: '© ២០២៦ — មជ្ឈមណ្ឌលភ្នំពេញ',
+        repair_management: 'គ្រប់គ្រងការស្តារ',
+        home: 'ទំព័រដើម', switch_role: 'ប្តូរតួនាទី',
+        role_staff: 'បុគ្គលិក', role_manager: 'អ្នកគ្រប់គ្រង', role_inhouse: 'ជាងក្នុងផ្ទះ', role_contractor: 'អ្នកស្តារខាងក្រៅ',
+        staff_dashboard: 'ផ្ទាំងគ្រប់គ្រងបុគ្គលិក', staff_dashboard_desc: 'រាយការបញ្ហាឧបករណ៍ និងតាមដានវឌ្ឍនភាពស្តារ', report_new_issue: 'រាយការបញ្ហាថ្មី', my_reported_issues: 'បញ្ហារបស់ខ្ញុំ & ប្រវត្តិថែទាំ', no_issues_reported: 'មិនមានបញ្ហាត្រូវបានរាយការនៅឡើយ។ ចុច "រាយការបញ្ហាថ្មី" ដើម្បីចាប់ផ្តើម។',
+        manager_dashboard: 'ផ្ទាំងគ្រប់គ្រងអ្នកគ្រប់គ្រង', manager_dashboard_desc: 'តាមដាន និងបញ្ជូនប្រតិបត្តិការស្តារក្នុងគ្រប់ទីតាំង',
+        pending_alerts: 'ការជូនដំណឹងរង់ចាំ', in_progress_label: 'កំពុងដំណើរការ', completed_label: 'បានបញ្ចប់',
+        pending_repair_alerts: 'ការជូនដំណឹងស្តាររង់ចាំ', action_required: 'ត្រូវការសកម្មភាព', action_needed: 'ត្រូវការសកម្មភាព',
+        dispatch: 'បញ្ជូន', chat: 'ជជែក', negotiate: 'ចរចា', negotiate_chat: 'ចរចា & ជជែក', awaiting_agreement: 'រង់ចាំការព្រមព្រៀង…', elapsed: 'កន្លងទៅ', no_tickets: 'មិនមានវិក្កយបត្រនៅឡើយ។',
+        inhouse_tech_title: 'ជាងក្នុងផ្ទះ', inhouse_tech_desc: 'ការងារស្តារសកម្មរបស់អ្នក — សេវាទាំងអស់ឥតគិតថ្លៃ១០០%', active_jobs: 'ការងារសកម្ម', active_jobs_label: 'ការងារសកម្ម', no_active_jobs: 'មិនមានការងារសកម្មបានចាត់តាំងទៅអ្នក។', completed_jobs: 'ការងារបានបញ្ចប់', reply_manager: 'ឆ្លើយតបអ្នកគ្រប់គ្រង', upload_proof: 'បង្ហោះស្នាម & បញ្ចប់', free_service: 'ឥតគិតថ្លៃ១០០% ($០)',
+        contractor_title: 'អ្នកស្តារខាងក្រៅ', contractor_desc: 'គ្រប់គ្រងការងារស្តារ និងវិក្កយបត្ររបស់អ្នក', active_contracts: 'កិច្ចសន្យាសកម្ម', no_active_contracts: 'មិនមានកិច្ចសន្យាសកម្មបានចាត់តាំងទៅអ្នក។', completed_contracts: 'កិច្ចសន្យាបានបញ្ចប់', paid_service: 'សេវាមានថ្លៃ', accept: 'ទទួលយក', decline: 'បដិសេធ', finish_invoice: 'បញ្ចប់ & វិក្កយបត្រ', chat_btn: 'ជជែក',
+        repairer: 'អ្នកស្តារ', free_label: '(ឥតគិតថ្លៃ)', completed_label_time: 'បានបញ្ចប់',
+        select_role: 'ជ្រើសរើសតួនាទីរបស់អ្នក', select_role_desc: 'ជ្រើសរើសរបៀបដែលអ្នកចង់ប្រើ FixFlow', staff: 'បុគ្គលិក', manager: 'អ្នកគ្រប់គ្រង', inhouse_tech: 'ជាងក្នុងផ្ទះ', outside_contractor: 'អ្នកស្តារខាងក្រៅ',
+        staff_desc: 'រាយការបញ្ហា និងតាមដានការស្តារ', manager_desc: 'បញ្ជូន និងគ្រប់គ្រងការស្តារទាំងអស់', inhouse_desc: 'ការងារស្តារឥតគិតថ្លៃបានចាត់តាំងទៅអ្នក', contractor_desc: 'កិច្ចសន្យាមានថ្លៃជាមួយការចរចា',
+        cancel: 'បោះបង់', must_pick_role: 'អ្នកត្រូវជ្រើសរើសតួនាទីដើម្បីបន្ត',
+        report_new_issue_title: 'រាយការបញ្ហាថ្មី', upload_photo: 'បង្ហោះឬថតរូបភាពឧបករណ៍', click_upload: 'ចុចដើម្បីបង្ហោះឬថតរូបភាព', ai_identify: 'AI នឹងស្គាល់ឧបករណ៍ដោយស្វ័យប្រវត្តិ', describe_problem: 'ពណ៌នាបញ្ហា', problem_placeholder: 'ឧ. ម៉ាស៊ីនមិនក្តៅ មានសំឡេងខុសប្រក្រតី...', submit_report: 'ដាក់ស្នើរាយការ AI ឥឡូវនេះ',
+        dispatch_repair_title: 'បញ្ជូនការស្តារ', reporter: 'អ្នករាយការ', method: 'វិធី', ai_confidence: 'ទំនុកចិត្ត AI', choose_repairer: 'ជ្រើសរើសប្រភេទអ្នកស្តារ', inhouse_staff: 'បុគ្គលិកក្នុងផ្ទះ', free_zero: 'ឥតគិតថ្លៃ១០០% ($០)', available: 'អាចប្រើបាន', total: 'សរុប', outside_contractor_company: 'អ្នកស្តារខាងក្រៅ / ក្រុមហ៊ុន', paid_negotiation: 'មានថ្លៃ — ចរចាតម្លៃ', companies: 'ក្រុមហ៊ុន', pp_areas: 'តំបន់ភ្នំពេញ',
+        select_inhouse_tech: 'ជ្រើសរើសជាងក្នុងផ្ទះ', back: 'ត្រឡប់', inhouse_free: 'ក្នុងផ្ទះ • ឥតគិតថ្លៃ១០០% ($០)', select_contractor: 'ជ្រើសរើសអ្នកស្តារខាងក្រៅ', contractor_paid: 'អ្នកស្តារខាងក្រៅ • មានថ្លៃ', view_details: 'មើលព័ត៌មាន', dispatch_btn: 'បញ្ជូន',
+        company_details: 'ព័ត៌មានក្រុមហ៊ុន', price_range: 'ជួរតម្លៃ', contact: 'ទំនាក់ទំនង', hours: 'ម៉ោងធ្វើប្រតិបត្តិ', location: 'ទីតាំង', services: 'សេវាកម្ម', reviews: 'ការវាយតម្លៃ', dispatch_to: 'បញ្ជូនទៅ',
+        price_negotiation: 'ការចរចាតម្លៃ', offered: 'បានផ្តល់', no_offer_yet: 'មិនមានការផ្តល់នៅឡើយ', no_messages: 'មិនមានសារនៅឡើយ។ ចាប់ផ្តើមជជែក។', propose: 'ស្នើ', counter: 'ប្រកួត', type_message: 'វាយសារ...', price_offered: 'តម្លៃបានផ្តល់', counter_offer: 'តម្លៃប្រកួត', accepted_msg: 'បានទទួលយក — តម្លៃបានព្រមព្រៀង', declined_msg: 'ការងារបានបដិសេធ',
+        switched_to: 'បានប្តូរទៅ', ai_report_submitted: 'រាយការ AI បានដាក់ស្នើ — ឧបករណ៍បានស្គាល់', dispatched_inhouse: 'បានបញ្ជូនទៅ', dispatched_contractor: 'បានបញ្ជូនទៅ', describe_first: 'សូមពណ៌នាបញ្ហាមុន', enter_price: 'សូមបញ្ចូលតម្លៃមុន', enter_counter: 'សូមបញ្ចូលតម្លៃប្រកួត', job_accepted: 'ការងារបានទទួលយកនៅ', no_price_accept: 'មិនមានតម្លៃដែលត្រូវទទួលយក', job_declined: 'ការងារបានបដិសេធ — បានត្រឡប់ទៅជួររង់ចាំ', repair_completed: 'ការស្តារបានបញ្ចប់ និងរក្សាទុកក្នុងប្រវត្តិ!', contract_finished: 'កិច្ចសន្យាបានបញ្ចប់ — វិក្កយបត្របានដាក់ស្នើសម្រាប់', confidence_suffix: '% ទំនុកចិត្ត',
+        status_pending: 'រង់ចាំ', status_dispatched: 'បានបញ្ជូន', status_in_progress: 'កំពុងដំណើរការ', status_completed: 'បានបញ្ចប់', status_negotiating: 'កំពុងចរចា',
+        language: 'ភាសា', just_now: 'ឥឡូវនេះ', ago_m: 'នាទីមុន', ago_h: 'ម៉ោងមុន', ago_d: 'ថ្ងៃមុន', negotiate_to_begin: '— ចរចាតម្លៃដើម្បីចាប់ផ្តើម',
+        ai_match: 'ផ្គូរផ្គង AI', by: 'ដោយ', agreed_price: 'តម្លៃបានព្រមព្រៀង៖',
+        khmer_label: 'ខ្មែរ',
+      }
+    };
+    function t(key) { return translations[lang]?.[key] || translations.en[key] || key; }
+    function setLang(l) {
+      lang = l;
+      const modalRoot = document.getElementById('modal-root');
+      const modalOpen = modalRoot && !modalRoot.classList.contains('hidden');
+      render();
+      if (modalOpen) {
+        if (state.activeChat) renderChatModal();
+        else if (state.dispatchTicketId) renderDispatchModal();
+        else if (state.page === 'app') showRoleModal();
+      }
+    }
+
+    // ─── SVG GENERATORS ───
+    function svgAvatar(seed, name) {
+      const palettes = [
+        ['#06b6d4', '#3b82f6'], ['#10b981', '#06b6d4'], ['#f59e0b', '#f97316'],
+        ['#ef4444', '#f59e0b'], ['#14b8a6', '#10b981'], ['#3b82f6', '#06b6d4'],
+        ['#f97316', '#ef4444'], ['#06b6d4', '#14b8a6'],
+      ];
+      const skins = ['#fcd9b6', '#f1c27d', '#e0ac69', '#c68642', '#8d5524'];
+      const hairs = ['#1a1a2e', '#2d1810', '#4a3520', '#1e1e1e', '#3b2616', '#0d1322'];
+      const p = palettes[seed % palettes.length];
+      const sk = skins[seed % skins.length];
+      const hr = hairs[seed % hairs.length];
+      const uid = 'av' + seed;
+      const styles = seed % 3;
+      let hairPath = '';
+      if (styles === 0) hairPath = `<path d="M28 36 Q50 20 72 36 Q72 28 50 26 Q28 28 28 36" fill="${hr}"/>`;
+      else if (styles === 1) hairPath = `<path d="M26 38 Q50 18 74 38 Q74 30 50 24 Q26 30 26 38" fill="${hr}"/><ellipse cx="50" cy="34" rx="24" ry="10" fill="${hr}"/>`;
+      else hairPath = `<path d="M30 34 Q50 22 70 34 L70 30 Q50 24 30 30 Z" fill="${hr}"/><circle cx="50" cy="28" r="6" fill="${hr}"/>`;
+      const glasses = seed % 4 === 0;
+      return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs><linearGradient id="${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${p[0]}"/><stop offset="100%" stop-color="${p[1]}"/></linearGradient></defs>
+        <circle cx="50" cy="50" r="50" fill="url(#${uid})"/>
+        <ellipse cx="50" cy="44" rx="22" ry="20" fill="${hr}" opacity="0.3"/>
+        <ellipse cx="50" cy="50" rx="17" ry="19" fill="${sk}"/>
+        ${hairPath}
+        ${glasses ? `<rect x="36" y="47" width="12" height="8" rx="3" fill="none" stroke="#1a1a2e" stroke-width="1.5"/><rect x="52" y="47" width="12" height="8" rx="3" fill="none" stroke="#1a1a2e" stroke-width="1.5"/><line x1="48" y1="51" x2="52" y2="51" stroke="#1a1a2e" stroke-width="1.5"/>` : `<circle cx="43" cy="50" r="2.2" fill="#1a1a2e"/><circle cx="57" cy="50" r="2.2" fill="#1a1a2e"/>`}
+        <path d="M44 58 Q50 62 56 58" stroke="#1a1a2e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>`;
+    }
+
+    function svgLogo(seed, name) {
+      const palettes = [
+        ['#06b6d4', '#3b82f6'], ['#10b981', '#06b6d4'], ['#f59e0b', '#f97316'],
+        ['#ef4444', '#dc2626'], ['#14b8a6', '#0ea5e9'], ['#3b82f6', '#1d4ed8'],
+        ['#f97316', '#ea580c'], ['#0ea5e9', '#06b6d4'],
+      ];
+      const p = palettes[seed % palettes.length];
+      const uid = 'lg' + seed;
+      const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      const shapes = [
+        `<rect width="100" height="100" rx="22" fill="url(#${uid})"/>`,
+        `<circle cx="50" cy="50" r="48" fill="url(#${uid})"/>`,
+        `<path d="M50 5 L90 28 L90 72 L50 95 L10 72 L10 28 Z" fill="url(#${uid})"/>`,
+        `<rect width="100" height="100" rx="12" fill="url(#${uid})"/>`,
+      ];
+      const icons = [
+        `<circle cx="50" cy="40" r="12" fill="none" stroke="#fff" stroke-width="3"/><path d="M50 52 L50 68 M40 68 L60 68" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
+        `<path d="M35 35 L65 65 M65 35 L35 65" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`,
+        `<path d="M50 30 L50 70 M30 50 L70 50" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="8" fill="none" stroke="#fff" stroke-width="3"/>`,
+        `<rect x="35" y="35" width="30" height="30" rx="4" fill="none" stroke="#fff" stroke-width="3"/><circle cx="50" cy="50" r="5" fill="#fff"/>`,
+      ];
+      return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs><linearGradient id="${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${p[0]}"/><stop offset="100%" stop-color="${p[1]}"/></linearGradient></defs>
+        ${shapes[seed % shapes.length]}
+        ${icons[seed % icons.length]}
+        <text x="50" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" opacity="0.7" font-family="Inter">${initials}</text>
+      </svg>`;
+    }
+
+    function svgBolt(size) {
+      return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:${size}px;height:${size}px">
+        <defs><linearGradient id="boltG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient></defs>
+        <path d="M28 4 L10 26 L20 26 L18 44 L38 20 L28 20 Z" fill="url(#boltG)" stroke="#22d3ee" stroke-width="1" stroke-linejoin="round" filter="drop-shadow(0 0 6px rgba(6,182,212,0.5))"/>
+      </svg>`;
+    }
+
+    function svgHeroArt() {
+      return `<svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs>
+          <linearGradient id="hg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#06b6d4" stop-opacity="0.15"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0.05"/></linearGradient>
+          <linearGradient id="hg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
+          <linearGradient id="hg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1322"/><stop offset="100%" stop-color="#070a14"/></linearGradient>
+          <radialGradient id="hg4" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#06b6d4" stop-opacity="0.3"/><stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="500" height="400" fill="url(#hg1)" rx="20"/>
+        <circle cx="250" cy="200" r="180" fill="url(#hg4)"/>
+        <!-- Grid lines -->
+        ${[0,1,2,3,4,5,6,7].map(i => `<line x1="${i*62.5}" y1="0" x2="${i*62.5}" y2="400" stroke="rgba(6,182,212,0.05)" stroke-width="1"/>`).join('')}
+        ${[0,1,2,3,4,5,6].map(i => `<line x1="0" y1="${i*57}" x2="500" y2="${i*57}" stroke="rgba(6,182,212,0.05)" stroke-width="1"/>`).join('')}
+        <!-- Central device -->
+        <rect x="150" y="120" width="200" height="160" rx="16" fill="url(#hg3)" stroke="url(#hg2)" stroke-width="2"/>
+        <rect x="170" y="140" width="160" height="80" rx="10" fill="#0a0f1c" stroke="rgba(6,182,212,0.2)"/>
+        <!-- Screen content -->
+        <circle cx="250" cy="180" r="22" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0.6"/>
+        <circle cx="250" cy="180" r="12" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.4"/>
+        <circle cx="250" cy="180" r="5" fill="#22d3ee"/>
+        <text x="250" y="245" text-anchor="middle" font-size="10" fill="#64748b" font-family="Inter">EQUIPMENT DIAGNOSTIC</text>
+        <!-- Buttons -->
+        <circle cx="180" cy="260" r="6" fill="#10b981" class="anim-pulse-dot"/>
+        <circle cx="200" cy="260" r="6" fill="#f59e0b"/>
+        <circle cx="220" cy="260" r="6" fill="#ef4444"/>
+        <!-- Scan line -->
+        <rect x="170" y="140" width="160" height="2" fill="#22d3ee" opacity="0.6">
+          <animate attributeName="y" from="140" to="218" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.8;0.1;0.8" dur="2s" repeatCount="indefinite"/>
+        </rect>
+        <!-- Floating particles -->
+        <circle cx="80" cy="80" r="4" fill="#22d3ee" opacity="0.6"><animate attributeName="cy" values="80;60;80" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="420" cy="100" r="3" fill="#3b82f6" opacity="0.5"><animate attributeName="cy" values="100;120;100" dur="4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="320" r="5" fill="#10b981" opacity="0.4"><animate attributeName="cx" values="100;120;100" dur="3.5s" repeatCount="indefinite"/></circle>
+        <circle cx="440" cy="300" r="4" fill="#06b6d4" opacity="0.5"><animate attributeName="cx" values="440;420;440" dur="2.5s" repeatCount="indefinite"/></circle>
+        <!-- Gear decoration -->
+        <g transform="translate(400,60)" class="anim-spin" style="transform-origin:400px 60px">
+          <g style="transform-box:fill-box;transform-origin:center">
+            <circle cx="0" cy="0" r="18" fill="none" stroke="rgba(6,182,212,0.2)" stroke-width="2"/>
+            ${[0,45,90,135,180,225,270,315].map(a => `<rect x="-3" y="-24" width="6" height="8" rx="1" fill="rgba(6,182,212,0.15)" transform="rotate(${a})"/>`).join('')}
+            <circle cx="0" cy="0" r="8" fill="none" stroke="rgba(6,182,212,0.3)" stroke-width="2"/>
+          </g>
+        </g>
+        <g transform="translate(70,340)">
+          <circle cx="0" cy="0" r="12" fill="none" stroke="rgba(59,130,246,0.2)" stroke-width="2"/>
+          ${[0,60,120,180,240,300].map(a => `<rect x="-2" y="-16" width="4" height="6" rx="1" fill="rgba(59,130,246,0.15)" transform="rotate(${a})"/>`).join('')}
+        </g>
+        <!-- Connection lines -->
+        <path d="M150 200 Q100 200 80 150" stroke="rgba(6,182,212,0.15)" stroke-width="1.5" fill="none" stroke-dasharray="4 4" class="anim-dash"/>
+        <path d="M350 200 Q400 200 420 150" stroke="rgba(59,130,246,0.15)" stroke-width="1.5" fill="none" stroke-dasharray="4 4" class="anim-dash"/>
+        <!-- Top status bar -->
+        <rect x="180" y="100" width="140" height="14" rx="7" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.2)"/>
+        <circle cx="192" cy="107" r="3" fill="#10b981" class="anim-pulse-dot"/>
+        <text x="202" y="111" font-size="8" fill="#64748b" font-family="Inter">AI SCAN ACTIVE</text>
+      </svg>`;
+    }
+
+    function svgCardArt(type) {
+      if (type === 'cafe') {
+        return `<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <defs><linearGradient id="cag" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d1322"/><stop offset="100%" stop-color="#070a14"/></linearGradient></defs>
+          <rect width="300" height="200" rx="12" fill="url(#cag)"/>
+          <line x1="0" y1="0" x2="300" y2="200" stroke="rgba(6,182,212,0.03)" stroke-width="1"/>
+          <line x1="300" y1="0" x2="0" y2="200" stroke="rgba(6,182,212,0.03)" stroke-width="1"/>
+          <!-- Counter -->
+          <rect x="40" y="120" width="220" height="50" rx="8" fill="rgba(6,182,212,0.06)" stroke="rgba(6,182,212,0.15)"/>
+          <!-- Espresso machine -->
+          <rect x="80" y="80" width="60" height="42" rx="6" fill="#0a0f1c" stroke="url(#cag2)" stroke-width="1.5"/>
+          <rect x="88" y="88" width="18" height="14" rx="3" fill="rgba(6,182,212,0.2)"/>
+          <rect x="114" y="88" width="18" height="14" rx="3" fill="rgba(6,182,212,0.2)"/>
+          <circle cx="110" cy="113" r="3" fill="#ef4444" class="anim-pulse-dot"/>
+          <!-- Cup -->
+          <rect x="168" y="100" width="20" height="22" rx="3" fill="none" stroke="rgba(6,182,212,0.3)" stroke-width="2"/>
+          <path d="M188 104 Q196 108 196 116 Q196 120 188 118" fill="none" stroke="rgba(6,182,212,0.3)" stroke-width="2"/>
+          <!-- Steam -->
+          <path d="M97 80 Q97 70 102 65 Q97 60 102 50" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none" stroke-linecap="round"><animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite"/></path>
+          <path d="M107 80 Q107 72 112 67 Q107 62 112 54" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none" stroke-linecap="round"><animate attributeName="opacity" values="0.1;0.3;0.1" dur="2s" repeatCount="indefinite"/></path>
+          <!-- Plant -->
+          <rect x="230" y="105" width="16" height="20" rx="2" fill="rgba(16,185,129,0.15)"/>
+          <path d="M238 105 Q238 85 230 75 M238 105 Q238 88 246 78 M238 105 Q238 90 238 72" stroke="rgba(16,185,129,0.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Lights -->
+          <circle cx="60" cy="40" r="6" fill="rgba(245,158,11,0.15)"><animate attributeName="opacity" values="0.3;0.6;0.3" dur="3s" repeatCount="indefinite"/></circle>
+          <circle cx="240" cy="40" r="6" fill="rgba(245,158,11,0.15)"><animate attributeName="opacity" values="0.6;0.3;0.6" dur="3s" repeatCount="indefinite"/></circle>
+          <line x1="60" y1="0" x2="60" y2="34" stroke="rgba(245,158,11,0.1)" stroke-width="1"/>
+          <line x1="240" y1="0" x2="240" y2="34" stroke="rgba(245,158,11,0.1)" stroke-width="1"/>
+          <text x="150" y="185" text-anchor="middle" font-size="9" fill="#475569" font-family="Inter">COMMERCIAL EQUIPMENT</text>
+        </svg>`;
+      }
+      if (type === 'ai') {
+        return `<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <defs><linearGradient id="aig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d1322"/><stop offset="100%" stop-color="#070a14"/></linearGradient></defs>
+          <rect width="300" height="200" rx="12" fill="url(#aig)"/>
+          <!-- Camera frame -->
+          <rect x="100" y="30" width="100" height="80" rx="8" fill="rgba(6,182,212,0.05)" stroke="rgba(6,182,212,0.2)"/>
+          <circle cx="150" cy="70" r="22" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0.6"/>
+          <circle cx="150" cy="70" r="12" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.4"/>
+          <circle cx="150" cy="70" r="5" fill="#22d3ee"/>
+          <!-- Scan line -->
+          <rect x="100" y="30" width="100" height="3" fill="#22d3ee" opacity="0.8">
+            <animate attributeName="y" from="30" to="110" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Corner brackets -->
+          <path d="M90 22 L90 18 L94 18" stroke="#22d3ee" stroke-width="2" fill="none"/>
+          <path d="M206 18 L210 18 L210 22" stroke="#22d3ee" stroke-width="2" fill="none"/>
+          <path d="M90 118 L90 122 L94 122" stroke="#22d3ee" stroke-width="2" fill="none"/>
+          <path d="M206 122 L210 122 L210 118" stroke="#22d3ee" stroke-width="2" fill="none"/>
+          <!-- AI badge -->
+          <rect x="110" y="130" width="80" height="24" rx="12" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.2)"/>
+          <circle cx="122" cy="142" r="4" fill="#10b981" class="anim-pulse-dot"/>
+          <text x="135" y="146" font-size="9" fill="#22d3ee" font-family="Inter" font-weight="600">AI SCAN</text>
+          <text x="150" y="175" text-anchor="middle" font-size="9" fill="#475569" font-family="Inter">AI PHOTO RECOGNITION</text>
+        </svg>`;
+      }
+      // phnom penh experts
+      return `<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs><linearGradient id="ppg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d1322"/><stop offset="100%" stop-color="#070a14"/></linearGradient></defs>
+        <rect width="300" height="200" rx="12" fill="url(#ppg)"/>
+        <!-- Map grid -->
+        ${[0,1,2,3,4,5].map(i => `<line x1="${i*50}" y1="0" x2="${i*50}" y2="200" stroke="rgba(6,182,212,0.04)" stroke-width="1"/>`).join('')}
+        ${[0,1,2,3,4].map(i => `<line x1="0" y1="${i*50}" x2="300" y2="${i*50}" stroke="rgba(6,182,212,0.04)" stroke-width="1"/>`).join('')}
+        <!-- Roads -->
+        <path d="M0 100 Q150 80 300 110" stroke="rgba(6,182,212,0.1)" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M150 0 Q140 100 160 200" stroke="rgba(6,182,212,0.1)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <!-- Location pins -->
+        <g transform="translate(80,70)">
+          <circle cx="0" cy="0" r="14" fill="rgba(6,182,212,0.15)"/>
+          <circle cx="0" cy="0" r="8" fill="rgba(6,182,212,0.3)"/>
+          <path d="M0 -10 C-6 -10 -10 -6 -10 0 C-10 6 0 16 0 16 C0 16 10 6 10 0 C10 -6 6 -10 0 -10 Z" fill="#22d3ee" opacity="0.7"/>
+          <circle cx="0" cy="0" r="3" fill="#070a14"/>
+        </g>
+        <g transform="translate(200,130)">
+          <circle cx="0" cy="0" r="14" fill="rgba(59,130,246,0.15)"/>
+          <path d="M0 -10 C-6 -10 -10 -6 -10 0 C-10 6 0 16 0 16 C0 16 10 6 10 0 C10 -6 6 -10 0 -10 Z" fill="#3b82f6" opacity="0.7"/>
+          <circle cx="0" cy="0" r="3" fill="#070a14"/>
+        </g>
+        <g transform="translate(150,50)">
+          <path d="M0 -8 C-5 -8 -8 -5 -8 0 C-8 5 0 13 0 13 C0 13 8 5 8 0 C8 -5 5 -8 0 -8 Z" fill="#10b981" opacity="0.6"/>
+          <circle cx="0" cy="0" r="2.5" fill="#070a14"/>
+        </g>
+        <!-- People avatars -->
+        <g transform="translate(50,160)">
+          <circle cx="0" cy="0" r="12" fill="rgba(6,182,212,0.2)" stroke="rgba(6,182,212,0.3)"/>
+          <circle cx="0" cy="-3" r="4" fill="#f1c27d"/>
+          <path d="M-6 6 Q0 2 6 6 L6 10 L-6 10 Z" fill="#06b6d4"/>
+        </g>
+        <g transform="translate(250,55)">
+          <circle cx="0" cy="0" r="12" fill="rgba(59,130,246,0.2)" stroke="rgba(59,130,246,0.3)"/>
+          <circle cx="0" cy="-3" r="4" fill="#e0ac69"/>
+          <path d="M-6 6 Q0 2 6 6 L6 10 L-6 10 Z" fill="#3b82f6"/>
+        </g>
+        <text x="150" y="195" text-anchor="middle" font-size="9" fill="#475569" font-family="Inter">PHNOM PENH EXPERTS</text>
+      </svg>`;
+    }
+
+    function svgStepArt(step) {
+      const base = (inner) => `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs><linearGradient id="st${step}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d1322"/><stop offset="100%" stop-color="#070a14"/></linearGradient></defs>
+        <rect width="120" height="120" rx="16" fill="url(#st${step})" stroke="rgba(6,182,212,0.15)"/>
+        ${inner}
+      </svg>`;
+      if (step === 1) {
+        return base(`
+          <rect x="30" y="30" width="60" height="45" rx="8" fill="rgba(6,182,212,0.08)" stroke="rgba(6,182,212,0.2)"/>
+          <circle cx="60" cy="52" r="12" fill="none" stroke="#22d3ee" stroke-width="2"/>
+          <circle cx="60" cy="52" r="6" fill="#22d3ee" opacity="0.3"/>
+          <rect x="50" y="78" width="20" height="4" rx="2" fill="rgba(6,182,212,0.2)"/>
+          <rect x="30" y="32" width="60" height="2" fill="#22d3ee" opacity="0.6"><animate attributeName="y" from="32" to="73" dur="2s" repeatCount="indefinite"/></rect>
+          <circle cx="48" cy="92" r="4" fill="#10b981" class="anim-pulse-dot"/>
+          <text x="56" y="95" font-size="7" fill="#475569" font-family="Inter">AI</text>
+        `);
+      }
+      if (step === 2) {
+        return base(`
+          <rect x="25" y="30" width="70" height="50" rx="8" fill="rgba(6,182,212,0.05)" stroke="rgba(6,182,212,0.15)"/>
+          <line x1="25" y1="45" x2="95" y2="45" stroke="rgba(6,182,212,0.1)"/>
+          <circle cx="35" cy="38" r="4" fill="#10b981"/>
+          <rect x="44" y="35" width="30" height="6" rx="3" fill="rgba(6,182,212,0.2)"/>
+          <circle cx="35" cy="55" r="4" fill="#f59e0b"/>
+          <rect x="44" y="52" width="40" height="6" rx="3" fill="rgba(6,182,212,0.15)"/>
+          <circle cx="35" cy="70" r="4" fill="#3b82f6"/>
+          <rect x="44" y="67" width="25" height="6" rx="3" fill="rgba(6,182,212,0.1)"/>
+          <path d="M80 60 L95 60 M90 55 L95 60 L90 65" stroke="#22d3ee" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        `);
+      }
+      if (step === 3) {
+        return base(`
+          <rect x="30" y="35" width="60" height="40" rx="10" fill="#ef4444" opacity="0.15" stroke="#ef4444" stroke-width="1.5"/>
+          <circle cx="60" cy="55" r="14" fill="none" stroke="#ef4444" stroke-width="2" class="anim-pulse-ring"/>
+          <text x="60" y="60" text-anchor="middle" font-size="10" font-weight="700" fill="#ef4444" font-family="Inter">12:05</text>
+          <path d="M50 30 Q50 25 55 25 L65 25 Q70 25 70 30" stroke="#f59e0b" stroke-width="1.5" fill="none" class="anim-bell" style="transform-origin:60px 25px"/>
+          <circle cx="60" cy="22" r="3" fill="#f59e0b"/>
+          <rect x="35" y="85" width="50" height="14" rx="7" fill="rgba(6,182,212,0.1)"/>
+          <circle cx="42" cy="92" r="3" fill="#22d3ee"/>
+          <rect x="48" y="89" width="30" height="6" rx="3" fill="rgba(6,182,212,0.2)"/>
+        `);
+      }
+      return base(`
+        <circle cx="60" cy="55" r="25" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="2"/>
+        <path d="M48 55 L56 63 L72 47" stroke="#10b981" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="60" cy="55" r="25" fill="none" stroke="#10b981" stroke-width="1" opacity="0.3"><animate attributeName="r" from="25" to="35" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" from="0.4" to="0" dur="2s" repeatCount="indefinite"/></circle>
+        <rect x="40" y="90" width="40" height="10" rx="5" fill="rgba(16,185,129,0.1)"/>
+        <text x="60" y="97" text-anchor="middle" font-size="7" fill="#10b981" font-family="Inter">SAVED TO HISTORY</text>
+      `);
+    }
+
+    function svgEquipmentPhoto(type) {
+      if (type === 'espresso') {
+        return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <defs><linearGradient id="ep1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#111a30"/><stop offset="100%" stop-color="#070a14"/></linearGradient></defs>
+          <rect width="200" height="150" rx="8" fill="url(#ep1)"/>
+          <rect x="60" y="20" width="80" height="100" rx="10" fill="#0a0f1c" stroke="rgba(6,182,212,0.2)"/>
+          <rect x="70" y="30" width="60" height="30" rx="6" fill="#050810" stroke="rgba(6,182,212,0.15)"/>
+          <circle cx="90" cy="45" r="6" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+          <circle cx="110" cy="45" r="6" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+          <rect x="75" y="70" width="20" height="20" rx="3" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.2)"/>
+          <rect x="105" y="70" width="20" height="20" rx="3" fill="rgba(6,182,212,0.1)" stroke="rgba(6,182,212,0.2)"/>
+          <circle cx="100" cy="110" r="4" fill="#ef4444" class="anim-pulse-dot"/>
+          <rect x="92" y="105" width="16" height="2" rx="1" fill="rgba(239,68,68,0.3)"/>
+          <text x="100" y="140" text-anchor="middle" font-size="8" fill="#475569" font-family="Inter">ESPRESSO MACHINE #04</text>
+        </svg>`;
+      }
+      return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs><linearGradient id="ac1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#111a30"/><stop offset="100%" stop-color="#070a14"/></linearGradient></defs>
+        <rect width="200" height="150" rx="8" fill="url(#ac1)"/>
+        <rect x="50" y="20" width="100" height="80" rx="8" fill="#0a0f1c" stroke="rgba(6,182,212,0.2)"/>
+        <rect x="58" y="28" width="84" height="50" rx="4" fill="#050810"/>
+        ${[0,1,2,3,4,5].map(i => `<line x1="${62+i*14}" y1="32" x2="${62+i*14}" y2="74" stroke="rgba(6,182,212,0.1)" stroke-width="2"/>`).join('')}
+        ${[0,1,2,3].map(i => `<line x1="60" y1="${36+i*10}" x2="140" y2="${36+i*10}" stroke="rgba(6,182,212,0.08)" stroke-width="1"/>`).join('')}
+        <rect x="65" y="84" width="70" height="10" rx="3" fill="rgba(6,182,212,0.05)" stroke="rgba(6,182,212,0.15)"/>
+        <circle cx="75" cy="89" r="3" fill="#ef4444" class="anim-pulse-dot"/>
+        <circle cx="90" cy="89" r="3" fill="#f59e0b"/>
+        <text x="105" y="92" font-size="7" fill="#64748b" font-family="Inter">35°C ALERT</text>
+        <text x="100" y="140" text-anchor="middle" font-size="8" fill="#475569" font-family="Inter">SERVER ROOM AC UNIT</text>
+      </svg>`;
+    }
+
+    function svgReportPhoto(seed) {
+      const colors = [
+        ['#0d1322', '#06b6d4'], ['#111a30', '#10b981'], ['#0a0f1c', '#f59e0b'], ['#0d1322', '#3b82f6'],
+      ];
+      const c = colors[seed % colors.length];
+      return `<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs><linearGradient id="rp${seed}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${c[0]}"/><stop offset="100%" stop-color="#070a14"/></linearGradient></defs>
+        <rect width="200" height="150" rx="8" fill="url(#rp${seed})"/>
+        <rect x="50" y="30" width="100" height="70" rx="10" fill="rgba(0,0,0,0.3)" stroke="rgba(6,182,212,0.15)"/>
+        <circle cx="100" cy="60" r="20" fill="none" stroke="${c[1]}" stroke-width="2" opacity="0.5"/>
+        <circle cx="100" cy="60" r="10" fill="${c[1]}" opacity="0.3"/>
+        <rect x="70" y="85" width="60" height="3" rx="1.5" fill="rgba(6,182,212,0.2)"/>
+        <rect x="80" y="93" width="40" height="3" rx="1.5" fill="rgba(6,182,212,0.1)"/>
+        <rect x="50" y="32" width="100" height="2" fill="${c[1]}" opacity="0.5"><animate attributeName="y" from="32" to="98" dur="2s" repeatCount="indefinite"/></rect>
+        <text x="100" y="130" text-anchor="middle" font-size="8" fill="#475569" font-family="Inter">AI PHOTO REPORT</text>
+      </svg>`;
+    }
+
+    // ─── SAMPLE DATA ───
+    function initData() {
+      state.tickets = [
+        {
+          id: 'FF-2401', asset: 'Espresso Machine #04', assetCode: 'ES-004',
+          location: 'Café Aurelia, BKK1', issue: 'Group head not heating properly, low pressure during extraction. Customers waiting.',
+          method: 'AI Photo', photo: svgEquipmentPhoto('espresso'), time: Date.now() - 15 * 60 * 1000,
+          status: 'Pending', reporter: 'Sopheap', aiConfidence: 99.4,
+          repairerType: null, repairerId: null, repairerName: null, timerStart: null,
+          chat: [], price: null, priceOffered: null, priceAgreed: false, accepted: false,
+          proofPhoto: null, completedAt: null,
+        },
+        {
+          id: 'FF-2402', asset: 'Server Room AC Unit', assetCode: 'AC-SRV-01',
+          location: 'Data Center, Sen Sok', issue: 'Compressor failure, server room temperature rising to 35°C. Critical infrastructure at risk.',
+          method: 'AI Photo', photo: svgEquipmentPhoto('ac'), time: Date.now() - 42 * 60 * 1000,
+          status: 'Pending', reporter: 'Dara', aiConfidence: null,
+          repairerType: null, repairerId: null, repairerName: null, timerStart: null,
+          chat: [], price: null, priceOffered: null, priceAgreed: false, accepted: false,
+          proofPhoto: null, completedAt: null,
+        },
+      ];
+    }
+
+    const inHouseStaff = [
+      { id: 'IH-01', name: 'Sok Pisey', role: 'Senior Electrical Tech', rating: 4.9, skills: ['Espresso Machines', 'Refrigeration', 'Electrical'], status: 'Available', seed: 0 },
+      { id: 'IH-02', name: 'Chen Dara', role: 'HVAC Specialist', rating: 4.7, skills: ['AC Units', 'Ventilation', 'Compressors'], status: 'Available', seed: 1 },
+      { id: 'IH-03', name: 'Lay Vannak', role: 'General Repair Tech', rating: 4.5, skills: ['Plumbing', 'Electrical', 'General Maintenance'], status: 'Available', seed: 2 },
+      { id: 'IH-04', name: 'Kim Sreyleak', role: 'Electronics Technician', rating: 4.8, skills: ['Circuit Boards', 'Sensors', 'Coffee Machines'], status: 'Busy', seed: 3 },
+      { id: 'IH-05', name: 'Hul Monyreach', role: 'Refrigeration Expert', rating: 4.6, skills: ['Commercial Freezers', 'AC Systems', 'Cooling'], status: 'Available', seed: 4 },
+    ];
+
+    const contractors = [
+      { id: 'OC-01', name: 'Phnom Penh Appliance Pro', area: 'BKK1', repairs: 'Espresso machines, blenders, ovens', rating: 4.8, contact: '012 345 678', priceRange: '$30-$120', priceMin: 35, hours: 'Mon-Sat 8AM-6PM', seed: 0, reviews: 124, reviewsData: [ { user: 'Café Owner', text: 'Fast and reliable, fixed our espresso machine same day.', stars: 5 }, { user: 'Restaurant Mgr', text: 'Professional service, fair pricing.', stars: 5 }, { user: 'Bar Owner', text: 'Good work but arrived a bit late.', stars: 4 } ] },
+      { id: 'OC-02', name: 'CoolTech HVAC Solutions', area: 'Toul Kork', repairs: 'AC units, refrigeration, ventilation', rating: 4.7, contact: '017 891 012', priceRange: '$50-$200', priceMin: 55, hours: 'Mon-Sun 7AM-8PM', seed: 1, reviews: 89, reviewsData: [ { user: 'Office Mgr', text: 'Excellent AC repair, very knowledgeable.', stars: 5 }, { user: 'Hotel Staff', text: 'Quick response for emergency call.', stars: 4 }, { user: 'Data Center', text: 'Saved our servers from overheating!', stars: 5 } ] },
+      { id: 'OC-03', name: 'BlueCool Refrigeration', area: 'Daun Penh', repairs: 'Commercial freezers, chillers, ice machines', rating: 4.6, contact: '098 765 432', priceRange: '$40-$150', priceMin: 45, hours: 'Mon-Fri 8AM-5PM', seed: 2, reviews: 67, reviewsData: [ { user: 'Bakery Owner', text: 'Fixed our chiller perfectly.', stars: 5 }, { user: 'Supermarket', text: 'Good service for commercial freezers.', stars: 4 } ] },
+      { id: 'OC-04', name: 'PowerLine Electrical Co.', area: 'Sen Sok', repairs: 'Electrical panels, wiring, generators', rating: 4.5, contact: '011 223 344', priceRange: '$25-$100', priceMin: 30, hours: 'Mon-Sat 7AM-6PM', seed: 3, reviews: 102, reviewsData: [ { user: 'Factory Mgr', text: 'Great electrical panel installation.', stars: 5 }, { user: 'Shop Owner', text: 'Reliable wiring work.', stars: 4 }, { user: 'Home Owner', text: 'Fixed our generator quickly.', stars: 5 } ] },
+      { id: 'OC-05', name: 'SteamGear Repair Hub', area: 'BKK1', repairs: 'Coffee machines, steam ovens, dishwashers', rating: 4.9, contact: '092 111 222', priceRange: '$35-$140', priceMin: 40, hours: 'Mon-Sun 8AM-7PM', seed: 4, reviews: 156, reviewsData: [ { user: 'Café Aurelia', text: 'Best coffee machine repair in PP!', stars: 5 }, { user: 'Bakery Mgr', text: 'Steam oven working like new.', stars: 5 }, { user: 'Restaurant', text: 'Highly recommend for kitchen equipment.', stars: 5 } ] },
+      { id: 'OC-06', name: 'ChillerKing Services', area: 'Toul Kork', repairs: 'AC, cold rooms, beverage coolers', rating: 4.4, contact: '015 678 901', priceRange: '$45-$180', priceMin: 50, hours: 'Mon-Sat 8AM-6PM', seed: 5, reviews: 73, reviewsData: [ { user: 'Convenience Store', text: 'Fixed our beverage cooler fast.', stars: 4 }, { user: 'Restaurant', text: 'Cold room repair was solid.', stars: 4 }, { user: 'Café Owner', text: 'Decent AC service.', stars: 5 } ] },
+      { id: 'OC-07', name: 'FixIt Express PP', area: 'Daun Penh', repairs: 'All commercial kitchen equipment', rating: 4.3, contact: '099 888 777', priceRange: '$30-$110', priceMin: 35, hours: 'Mon-Sun 7AM-9PM', seed: 6, reviews: 91, reviewsData: [ { user: 'Food Court', text: 'Quick fix on our fryer.', stars: 4 }, { user: 'Café Staff', text: 'Affordable and decent service.', stars: 4 }, { user: 'Catering Co.', text: 'Good for emergency repairs.', stars: 5 } ] },
+      { id: 'OC-08', name: 'TechRepair Cambodia', area: 'Sen Sok', repairs: 'Server room cooling, IT equipment, UPS', rating: 4.7, contact: '012 999 000', priceRange: '$60-$250', priceMin: 65, hours: '24/7 Emergency', seed: 7, reviews: 45, reviewsData: [ { user: 'Data Center Mgr', text: 'Saved our server room from meltdown!', stars: 5 }, { user: 'IT Company', text: 'Expert cooling solutions for IT infra.', stars: 5 }, { user: 'Bank', text: 'Reliable UPS maintenance.', stars: 4 } ] },
+    ];
+
+    // ─── UTILITIES ───
+    function timeAgo(ts) {
+      const diff = Math.floor((Date.now() - ts) / 1000);
+      if (diff < 60) return 'just now';
+      if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+      return Math.floor(diff / 86400) + 'd ago';
+    }
+
+    function formatTimer(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${m}m ${String(s).padStart(2, '0')}s`;
+    }
+
+    function statusBadge(status) {
+      const map = {
+        'Pending': { cls: 'status-pending', icon: dotIcon('#fbbf24'), label: t('status_pending') },
+        'Dispatched': { cls: 'status-dispatched', icon: dotIcon('#22d3ee'), label: t('status_dispatched') },
+        'In Progress': { cls: 'status-progress', icon: dotIcon('#60a5fa'), label: t('status_in_progress') },
+        'Completed': { cls: 'status-completed', icon: dotIcon('#34d399'), label: t('status_completed') },
+        'Negotiating': { cls: 'status-negotiating', icon: dotIcon('#c084fc'), label: t('status_negotiating') },
+      };
+      const s = map[status] || map['Pending'];
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${s.cls}">${s.icon}${s.label}</span>`;
+    }
+
+    function dotIcon(color) {
+      return `<svg width="6" height="6" viewBox="0 0 6 6"><circle cx="3" cy="3" r="3" fill="${color}"/></svg>`;
+    }
+
+    function starIcon() {
+      return `<svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+    }
+
+    function stars(n) {
+      return `<span class="inline-flex items-center gap-0.5">${starIcon()}<span class="text-amber-400 font-semibold text-xs">${n}</span></span>`;
+    }
+
+    function showToast(msg, type) {
+      const colors = {
+        success: { bg: 'rgba(16,185,129,0.15)', border: 'rgba(16,185,129,0.4)', icon: '#34d399' },
+        info: { bg: 'rgba(6,182,212,0.15)', border: 'rgba(6,182,212,0.4)', icon: '#22d3ee' },
+        warning: { bg: 'rgba(245,158,11,0.15)', border: 'rgba(245,158,11,0.4)', icon: '#fbbf24' },
+        error: { bg: 'rgba(239,68,68,0.15)', border: 'rgba(239,68,68,0.4)', icon: '#ef4444' },
+      };
+      const c = colors[type] || colors.info;
+      const id = 'toast-' + Date.now();
+      const html = `<div id="${id}" class="pointer-events-auto glass-strong rounded-xl px-4 py-3 flex items-center gap-3 anim-slide-right" style="background:${c.bg};border-color:${c.border}">
+        <div class="w-2 h-2 rounded-full anim-pulse-dot" style="background:${c.icon}"></div>
+        <span class="text-sm text-slate-200">${msg}</span>
+      </div>`;
+      document.getElementById('toast-container').insertAdjacentHTML('beforeend', html);
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) { el.style.opacity = '0'; el.style.transform = 'translateX(60px)'; el.style.transition = 'all 0.3s'; setTimeout(() => el.remove(), 300); }
+      }, 3500);
+    }
+
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      canvas.classList.remove('hidden');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const colors = ['#06b6d4', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#14b8a6', '#22d3ee'];
+      const particles = [];
+      for (let i = 0; i < 180; i++) {
+        particles.push({
+          x: window.innerWidth / 2, y: window.innerHeight / 2,
+          vx: (Math.random() - 0.5) * 18, vy: (Math.random() - 0.5) * 18 - 8,
+          size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360, rotSpeed: (Math.random() - 0.5) * 12, gravity: 0.35,
+        });
+      }
+      let frame = 0;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.rotation += p.rotSpeed;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation * Math.PI / 180);
+          ctx.fillStyle = p.color; ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 150) requestAnimationFrame(animate);
+        else { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.classList.add('hidden'); }
+      }
+      animate();
+    }
+
+    // ─── RENDER ROOT ───
+    function render() {
+      const root = document.getElementById('app-root');
+      if (state.page === 'landing') root.innerHTML = renderLanding();
+      else root.innerHTML = renderApp();
+    }
+
+    // ─── LANDING PAGE ───
+    function renderLanding() {
+      return `
+      <div class="min-h-screen grid-bg">
+        <div class="radial-glow min-h-screen">
+          <!-- Top Bar -->
+          <div class="sticky top-0 z-40 glass-strong border-b border-accent-500/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                ${svgBolt(32)}
+                <div>
+                  <span class="text-lg font-extrabold gradient-text tracking-tight">FixFlow</span>
+                  <div class="text-[9px] text-slate-500 font-medium tracking-widest -mt-0.5">REPAIR MANAGEMENT</div>
+                </div>
+              </div>
+              <button onclick="showRoleModal()" class="btn-primary px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+                <span class="hidden sm:inline">Launch App</span>
+                <span class="sm:hidden">Launch</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero -->
+          <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 pb-16 relative">
+            <div class="absolute inset-0 pointer-events-none overflow-hidden">
+              <div class="particle" style="left:10%;bottom:0;width:6px;height:6px;background:#22d3ee;animation-delay:0s"></div>
+              <div class="particle" style="left:25%;bottom:0;width:4px;height:4px;background:#3b82f6;animation-delay:1.5s"></div>
+              <div class="particle" style="left:45%;bottom:0;width:8px;height:8px;background:#06b6d4;animation-delay:0.8s"></div>
+              <div class="particle" style="left:65%;bottom:0;width:5px;height:5px;background:#22d3ee;animation-delay:2.2s"></div>
+              <div class="particle" style="left:80%;bottom:0;width:7px;height:7px;background:#3b82f6;animation-delay:1.2s"></div>
+              <div class="particle" style="left:90%;bottom:0;width:4px;height:4px;background:#06b6d4;animation-delay:3s"></div>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+              <div class="anim-fade-in">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-6">
+                  <span class="w-2 h-2 rounded-full bg-accent-400 anim-pulse-dot"></span>
+                  <span class="text-xs font-medium text-accent-300">Next-Gen Equipment Maintenance</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4">
+                  Instant Repair Management<br><span class="gradient-text">AI Photo Powered</span>
+                </h1>
+                <p class="text-slate-400 text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
+                  FixFlow streamlines equipment repair workflows for Phnom Penh's modern workspaces and cafés. Report issues with AI photo recognition, dispatch in-house or outside technicians, and track repairs in real time.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                  <button onclick="showRoleModal()" class="btn-primary px-6 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2">
+                    Enter Platform Now
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </button>
+                  <button onclick="scrollToGuide()" class="btn-ghost px-6 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2">
+                    View User Guide
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="relative anim-fade-in" style="animation-delay:0.2s">
+                <div class="glass rounded-2xl p-3 neon-glow relative overflow-hidden">
+                  <div class="absolute top-0 left-0 right-0 h-1" style="background:linear-gradient(90deg,#22d3ee,#3b82f6,#22d3ee);background-size:200% 100%;animation:gradientShift 3s linear infinite"></div>
+                  <div class="rounded-xl overflow-hidden relative">
+                    <img src="https://images.pexels.com/photos/6612572/pexels-photo-6612572.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Modern coffee shop with commercial espresso machine" class="w-full h-[300px] sm:h-[360px] object-cover anim-ken-burns" />
+                    <div class="absolute inset-0" style="background:linear-gradient(135deg,rgba(7,10,20,0.35),rgba(6,182,212,0.12),rgba(59,130,246,0.08))"></div>
+                    <div class="absolute top-4 left-4 glass-strong rounded-lg px-3 py-1.5 flex items-center gap-2 anim-glow2">
+                      <span class="w-2 h-2 rounded-full bg-green-400 anim-pulse-dot"></span>
+                      <span class="text-xs font-medium text-slate-300">AI Scan Active</span>
+                    </div>
+                    <div class="absolute top-4 right-4 glass-strong rounded-lg px-3 py-1.5">
+                      <span class="text-xs font-medium text-accent-300">Live Feed</span>
+                    </div>
+                    <div class="absolute inset-0 pointer-events-none">
+                      <div class="anim-scan-overlay"></div>
+                    </div>
+                    <div class="absolute bottom-4 right-4 glass-strong rounded-lg px-3 py-2 flex items-center gap-2">
+                      <div class="w-2 h-2 rounded-full bg-red-500 anim-pulse-ring"></div>
+                      <span class="text-xs text-slate-300">2 Active Alerts</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="absolute -bottom-5 -left-3 sm:-left-5 glass-strong rounded-xl p-3 sm:p-4 anim-float max-w-[260px] sm:max-w-xs neon-glow">
+                  <div class="flex items-center gap-2 mb-2">
+                    <div class="w-7 h-7 rounded-lg bg-accent-500/20 flex items-center justify-center">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-accent-300">Live AI Recognition</span>
+                  </div>
+                  <p class="text-xs text-slate-300 leading-relaxed mb-2">Active — Espresso Machine #04 matched</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-500">Match Confidence</span>
+                    <span class="text-sm font-bold text-accent-400">99.4%</span>
+                  </div>
+                  <div class="mt-1.5 h-1.5 rounded-full bg-navy-700 overflow-hidden">
+                    <div class="h-full rounded-full" style="width:99.4%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Designed For -->
+          <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+            <div class="text-center mb-10">
+              <h2 class="text-2xl sm:text-3xl font-bold mb-2">Designed for Modern Workspaces &amp; Cafés</h2>
+              <p class="text-slate-400 max-w-2xl mx-auto">From commercial kitchens to server rooms, FixFlow adapts to your equipment maintenance needs.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 stagger">
+              ${[
+                { photo: 'https://images.pexels.com/photos/39583847/pexels-photo-39583847.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Café & Restaurant', desc: 'Commercial espresso machines, ovens, refrigerators and kitchen equipment' },
+                { photo: 'https://images.pexels.com/photos/16345589/pexels-photo-16345589.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'AI Photo Scan', desc: 'Report issues instantly via AI-powered photo recognition' },
+                { photo: 'https://images.pexels.com/photos/19063351/pexels-photo-19063351.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Phnom Penh Experts', desc: 'In-house technicians and vetted outside contractors across all districts' },
+              ].map(c => `
+                <div class="glass rounded-2xl overflow-hidden gradient-border group hover:neon-glow transition-all duration-300">
+                  <div class="aspect-[3/2] overflow-hidden relative">
+                    <img src="${c.photo}" alt="${c.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <div class="absolute inset-0 photo-overlay"></div>
+                    <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-accent-400 anim-pulse-dot"></span>
+                      <span class="text-[10px] font-medium text-accent-300 uppercase tracking-wider">${c.title}</span>
+                    </div>
+                  </div>
+                  <div class="p-5">
+                    <h3 class="font-semibold text-lg mb-1.5">${c.title}</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">${c.desc}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- About FixFlow -->
+          <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-4">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                <span class="text-xs font-medium text-accent-300">Platform Overview</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-bold mb-2">About <span class="shimmer-text">FixFlow</span></h2>
+              <p class="text-slate-400 max-w-2xl mx-auto">A complete repair management ecosystem built for Phnom Penh's growing café, restaurant, and commercial workspace industry.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-6 mb-8">
+              <div class="glass rounded-2xl overflow-hidden gradient-border group hover:neon-glow transition-all duration-300">
+                <div class="aspect-video overflow-hidden relative">
+                  <img src="https://images.pexels.com/photos/38264262/pexels-photo-38264262.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Coffee machine undergoing repair" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div class="absolute inset-0 photo-overlay"></div>
+                  <div class="absolute bottom-4 left-4 right-4">
+                    <span class="text-xs font-medium text-accent-300 uppercase tracking-wider">AI Photo Recognition</span>
+                    <h3 class="text-lg font-bold text-white mt-1">Snap a photo — AI identifies the equipment</h3>
+                  </div>
+                </div>
+                <div class="p-5">
+                  <p class="text-sm text-slate-400 leading-relaxed">Staff simply take a photo of the broken equipment. FixFlow's AI engine instantly identifies the make and model, matches it against the asset database, and auto-fills the repair ticket — no manual lookup needed.</p>
+                </div>
+              </div>
+              <div class="glass rounded-2xl overflow-hidden gradient-border group hover:neon-glow transition-all duration-300">
+                <div class="aspect-video overflow-hidden relative">
+                  <img src="https://images.pexels.com/photos/5463581/pexels-photo-5463581.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="HVAC technician repairing air conditioner" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div class="absolute inset-0 photo-overlay"></div>
+                  <div class="absolute bottom-4 left-4 right-4">
+                    <span class="text-xs font-medium text-accent-300 uppercase tracking-wider">Smart Dispatch</span>
+                    <h3 class="text-lg font-bold text-white mt-1">Choose in-house or outside contractors</h3>
+                  </div>
+                </div>
+                <div class="p-5">
+                  <p class="text-sm text-slate-400 leading-relaxed">Managers dispatch repairs with a single click. In-house technicians are 100% free. Outside contractors offer competitive pricing with live negotiation — both tracked with real-time countdown timers.</p>
+                </div>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 stagger mb-8">
+              <div class="glass rounded-xl p-5 text-center gradient-border">
+                <div class="text-3xl font-extrabold gradient-text mb-1">4</div>
+                <div class="text-xs text-slate-400">User Roles</div>
+                <div class="text-[10px] text-slate-600 mt-1">Staff, Manager, In-House Tech, Contractor</div>
+              </div>
+              <div class="glass rounded-xl p-5 text-center gradient-border">
+                <div class="text-3xl font-extrabold gradient-text mb-1">5</div>
+                <div class="text-xs text-slate-400">In-House Techs</div>
+                <div class="text-[10px] text-slate-600 mt-1">Khmer-named, rated, skilled</div>
+              </div>
+              <div class="glass rounded-xl p-5 text-center gradient-border">
+                <div class="text-3xl font-extrabold gradient-text mb-1">8</div>
+                <div class="text-xs text-slate-400">Contractor Companies</div>
+                <div class="text-[10px] text-slate-600 mt-1">BKK1, Toul Kork, Daun Penh, Sen Sok</div>
+              </div>
+              <div class="glass rounded-xl p-5 text-center gradient-border">
+                <div class="text-3xl font-extrabold gradient-text mb-1">1</div>
+                <div class="text-xs text-slate-400">Report Method</div>
+                <div class="text-[10px] text-slate-600 mt-1">AI Photo Recognition</div>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
+              <div class="glass rounded-xl p-4 gradient-border flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,0.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                <div><h4 class="font-semibold text-sm mb-1">AI Photo Recognition</h4><p class="text-xs text-slate-400 leading-relaxed">Upload or snap a photo. AI matches equipment with 99%+ confidence and auto-creates the ticket.</p></div>
+              </div>
+              <div class="glass rounded-xl p-4 gradient-border flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(16,185,129,0.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></div>
+                <div><h4 class="font-semibold text-sm mb-1">Smart Dispatch</h4><p class="text-xs text-slate-400 leading-relaxed">In-house (free) or outside contractor with live price negotiation and acceptance flow.</p></div>
+              </div>
+              <div class="glass rounded-xl p-4 gradient-border flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(239,68,68,0.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <div><h4 class="font-semibold text-sm mb-1">Live Timer Tracking</h4><p class="text-xs text-slate-400 leading-relaxed">Technician badge turns red with a live countdown. Every second is tracked from dispatch to completion.</p></div>
+              </div>
+              <div class="glass rounded-xl p-4 gradient-border flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(168,85,247,0.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                <div><h4 class="font-semibold text-sm mb-1">Real-Time Chat</h4><p class="text-xs text-slate-400 leading-relaxed">Manager and technician chat live. Negotiate prices, share updates, and coordinate repairs.</p></div>
+              </div>
+              <div class="glass rounded-xl p-4 gradient-border flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,0.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+                <div><h4 class="font-semibold text-sm mb-1">Proof & History</h4><p class="text-xs text-slate-400 leading-relaxed">Technicians upload proof photos. Completed jobs are archived with full history and confetti celebration.</p></div>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-4 mt-8 stagger">
+              <div class="glass rounded-2xl overflow-hidden gradient-border group hover:neon-glow transition-all duration-300">
+                <div class="aspect-[2/1] overflow-hidden relative">
+                  <img src="https://images.pexels.com/photos/37730212/pexels-photo-37730212.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Server room data center" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div class="absolute inset-0 photo-overlay"></div>
+                  <div class="absolute bottom-3 left-3"><span class="text-xs font-medium text-red-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-red-500 anim-pulse-dot"></span>Critical Alert</span></div>
+                </div>
+                <div class="p-4"><h4 class="font-semibold text-sm">Server Room Cooling</h4><p class="text-xs text-slate-400 mt-1">AC failure in data centers — temperature alerts dispatched instantly.</p></div>
+              </div>
+              <div class="glass rounded-2xl overflow-hidden gradient-border group hover:neon-glow transition-all duration-300">
+                <div class="aspect-[2/1] overflow-hidden relative">
+                  <img src="https://images.pexels.com/photos/6612597/pexels-photo-6612597.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Barista preparing coffee on espresso machine" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div class="absolute inset-0 photo-overlay"></div>
+                  <div class="absolute bottom-3 left-3"><span class="text-xs font-medium text-amber-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 anim-pulse-dot"></span>Pending Repair</span></div>
+                </div>
+                <div class="p-4"><h4 class="font-semibold text-sm">Espresso Machine Repair</h4><p class="text-xs text-slate-400 mt-1">Group head issues, pressure loss — matched by AI at 99.4% confidence.</p></div>
+              </div>
+              <div class="glass rounded-2xl overflow-hidden gradient-border group hover:neon-glow transition-all duration-300">
+                <div class="aspect-[2/1] overflow-hidden relative">
+                  <img src="https://images.pexels.com/photos/8986037/pexels-photo-8986037.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Technician inspecting equipment" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div class="absolute inset-0 photo-overlay"></div>
+                  <div class="absolute bottom-3 left-3"><span class="text-xs font-medium text-green-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-green-500 anim-pulse-dot"></span>In Progress</span></div>
+                </div>
+                <div class="p-4"><h4 class="font-semibold text-sm">Expert Technicians</h4><p class="text-xs text-slate-400 mt-1">Rated in-house staff and vetted contractors across Phnom Penh districts.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Photo Gallery -->
+          <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 overflow-hidden">
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-4">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span class="text-xs font-medium text-green-400">Real Work, Real Results</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-bold mb-2">See FixFlow in Action</h2>
+              <p class="text-slate-400 max-w-2xl mx-auto">From bustling cafes to precision equipment repair — our platform keeps Phnom Penh running.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger">
+              ${[
+                { photo: 'https://images.pexels.com/photos/38264265/pexels-photo-38264265.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Precision Repair', desc: 'Skilled technicians diagnose and fix equipment on the spot' },
+                { photo: 'https://images.pexels.com/photos/6612594/pexels-photo-6612594.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Cafe Equipment', desc: 'Espresso machines serviced and back online in minutes' },
+                { photo: 'https://images.pexels.com/photos/12741844/pexels-photo-12741844.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Electronics Workbench', desc: 'Component-level repair by certified in-house techs' },
+                { photo: 'https://images.pexels.com/photos/36484101/pexels-photo-36484101.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Modern Workspaces', desc: 'Beautiful cafes and offices powered by FixFlow' },
+                { photo: 'https://images.pexels.com/photos/27928761/pexels-photo-27928761.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'On-Site Service', desc: 'Contractors arrive equipped and ready to work' },
+                { photo: 'https://images.pexels.com/photos/11406429/pexels-photo-11406429.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Quality You Can Taste', desc: 'Well-maintained equipment means better coffee' },
+              ].map(c => `
+                <div class="glass rounded-2xl overflow-hidden gradient-border group hover:neon-glow transition-all duration-300">
+                  <div class="aspect-[4/3] overflow-hidden relative">
+                    <img src="${c.photo}" alt="${c.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div class="absolute inset-0 photo-overlay"></div>
+                    <div class="absolute bottom-3 left-3 right-3">
+                      <span class="text-xs font-medium text-accent-300 uppercase tracking-wider">${c.title}</span>
+                      <p class="text-xs text-slate-400 mt-0.5">${c.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- Demo Guide -->
+          <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-4">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                <span class="text-xs font-medium text-amber-400">Quick Start</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-bold mb-2">Before You Demo</h2>
+              <p class="text-slate-400 max-w-2xl mx-auto">A quick walkthrough to help you get the most out of the FixFlow demo. Pick a role and explore the full repair workflow.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 stagger mb-6">
+              <div class="glass rounded-2xl p-5 gradient-border">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff">1</div>
+                  <h3 class="font-semibold">Pick a Role</h3>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">Click "Launch App" and choose from Staff, Manager, In-House Technician, or Outside Contractor. Each role sees a different dashboard tailored to their workflow. You can switch roles anytime from the header.</p>
+              </div>
+              <div class="glass rounded-2xl p-5 gradient-border">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff">2</div>
+                  <h3 class="font-semibold">Try the Staff View</h3>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">Click "Report New Issue" to open the report popup. Upload any image and describe a problem — AI will identify the equipment automatically. Submit and watch your ticket appear instantly.</p>
+              </div>
+              <div class="glass rounded-2xl p-5 gradient-border">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff">3</div>
+                  <h3 class="font-semibold">Explore the Manager View</h3>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">See pending alerts with "Action Needed" ribbons. Click "Dispatch" to choose between free in-house staff or paid outside contractors. Browse 5 in-house techs and 8 companies with ratings, reviews, and pricing. Negotiate a price in the chat.</p>
+              </div>
+              <div class="glass rounded-2xl p-5 gradient-border">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff">4</div>
+                  <h3 class="font-semibold">Complete a Repair</h3>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">Switch to the In-House Technician view and click "Upload Proof & Complete" to trigger a confetti celebration. Or try the Outside Contractor view to negotiate, accept, and submit an invoice. Watch the live timer count up in real time.</p>
+              </div>
+            </div>
+            <div class="glass rounded-2xl p-5 sm:p-6 gradient-border">
+              <h3 class="font-semibold mb-4 flex items-center gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Sample Data in This Demo</h3>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+                <div class="glass rounded-lg p-3"><div class="text-xs text-slate-500 mb-0.5">Ticket 1</div><div class="font-medium text-slate-300">Espresso Machine #04</div><div class="text-xs text-slate-500 mt-0.5">Café Aurelia, BKK1 • AI Photo</div></div>
+                <div class="glass rounded-lg p-3"><div class="text-xs text-slate-500 mb-0.5">Ticket 2</div><div class="font-medium text-slate-300">Server Room AC Unit</div><div class="text-xs text-slate-500 mt-0.5">Data Center, Sen Sok • AI Photo</div></div>
+                <div class="glass rounded-lg p-3"><div class="text-xs text-slate-500 mb-0.5">In-House Team</div><div class="font-medium text-slate-300">5 Technicians</div><div class="text-xs text-slate-500 mt-0.5">Khmer names, rated, skilled</div></div>
+                <div class="glass rounded-lg p-3"><div class="text-xs text-slate-500 mb-0.5">Contractors</div><div class="font-medium text-slate-300">8 Companies</div><div class="text-xs text-slate-500 mt-0.5">BKK1, Toul Kork, Daun Penh, Sen Sok</div></div>
+              </div>
+              <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                <button onclick="showRoleModal()" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 anim-glow2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  Start Demo Now
+                </button>
+                <button onclick="scrollToGuide()" class="btn-ghost px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2">View Operational Guideline</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Operational Guideline -->
+          <section id="guide-section" class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+            <div class="text-center mb-10">
+              <h2 class="text-2xl sm:text-3xl font-bold mb-2">FixFlow Operational Guideline</h2>
+              <p class="text-slate-400 max-w-2xl mx-auto">Four simple steps from issue report to completed repair.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 stagger">
+              ${[
+                { photo: 'https://images.pexels.com/photos/4349954/pexels-photo-4349954.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Report Issue', desc: 'Staff reports a problem using AI photo recognition — just snap a photo and AI identifies the equipment.' },
+                { photo: 'https://images.pexels.com/photos/5779775/pexels-photo-5779775.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Dispatch Repair', desc: 'Manager chooses In-House (free) or Outside Contractor, negotiates the price, then dispatches the job.' },
+                { photo: 'https://images.pexels.com/photos/5463575/pexels-photo-5463575.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Live Tracking', desc: 'Technician badge turns RED with a live countdown timer. Both sides chat in real time during the repair.' },
+                { photo: 'https://images.pexels.com/photos/13735849/pexels-photo-13735849.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', title: 'Complete & Save', desc: 'Technician uploads a proof photo and completes the job. The record is saved in Repair History.' },
+              ].map((s, i) => `
+                <div class="glass rounded-2xl overflow-hidden gradient-border relative group hover:neon-glow transition-all duration-300">
+                  <div class="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;box-shadow:0 0 16px rgba(6,182,212,0.4)">${i + 1}</div>
+                  <div class="aspect-[3/2] overflow-hidden relative">
+                    <img src="${s.photo}" alt="${s.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <div class="absolute inset-0 photo-overlay"></div>
+                    <div class="absolute top-3 left-3 glass-strong rounded-lg px-2.5 py-1">
+                      <span class="text-[10px] font-bold text-accent-300">STEP ${i + 1}</span>
+                    </div>
+                  </div>
+                  <div class="p-5">
+                    <h3 class="font-semibold mb-1.5">${s.title}</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">${s.desc}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer class="border-t border-accent-500/10 mt-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                ${svgBolt(24)}
+                <span class="font-bold gradient-text">FixFlow</span>
+                <span class="text-xs text-slate-500">© 2026 — Phnom Penh Hub</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs text-slate-500">
+                <span class="w-2 h-2 rounded-full bg-green-400 anim-pulse-dot"></span>
+                System Online • Phnom Penh Hub
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>`;
+    }
+
+    function scrollToGuide() {
+      const el = document.getElementById('guide-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ─── APP HEADER ───
+    function renderApp() {
+      const roleLabels = { staff: 'Staff', manager: 'Manager', inhouse: 'In-House Technician', contractor: 'Outside Contractor' };
+      return `
+      <div class="min-h-screen grid-bg">
+        <div class="radial-glow min-h-screen">
+          <!-- App Header -->
+          <div class="sticky top-0 z-40 glass-strong border-b border-accent-500/10">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                ${svgBolt(28)}
+                <div class="hidden sm:block">
+                  <span class="text-base font-extrabold gradient-text">FixFlow</span>
+                  <div class="text-[9px] text-slate-500 tracking-widest -mt-0.5">REPAIR MANAGEMENT</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 sm:gap-3">
+                <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg glass">
+                  <span class="w-2 h-2 rounded-full bg-green-400 anim-pulse-dot"></span>
+                  <span class="text-xs text-slate-400">System Online • Phnom Penh Hub</span>
+                </div>
+                <div class="px-3 py-1.5 rounded-lg glass flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">
+                    <span class="text-xs font-bold text-white">${roleLabels[state.role][0]}</span>
+                  </div>
+                  <span class="text-sm font-medium text-slate-300 hidden sm:inline">${roleLabels[state.role]}</span>
+                </div>
+                <button onclick="goHome()" class="btn-ghost px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <span class="hidden sm:inline">Home</span>
+                </button>
+                <button onclick="showRoleModal()" class="btn-ghost px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                  <span class="hidden sm:inline">Switch Role</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+            ${state.role === 'staff' ? renderStaff() : ''}
+            ${state.role === 'manager' ? renderManager() : ''}
+            ${state.role === 'inhouse' ? renderInHouseTech() : ''}
+            ${state.role === 'contractor' ? renderContractor() : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ─── STAFF VIEW ───
+    function renderStaff() {
+      const myTickets = state.tickets.filter(t => t.reporter === 'Sopheap' || t.reporter === 'Dara' || t.reporter === 'You');
+      return `
+      <div class="anim-fade-in">
+        <div class="glass rounded-2xl p-5 sm:p-6 gradient-border mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold mb-1">Staff Dashboard</h2>
+            <p class="text-sm text-slate-400">Report equipment issues and track repair progress</p>
+          </div>
+          <button onclick="showReportModal()" class="btn-primary px-5 py-3 rounded-xl font-semibold flex items-center gap-2 whitespace-nowrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Report New Issue
+          </button>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><path d="M9 11H7a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="8" rx="1"/></svg>
+            My Reported Issues &amp; Maintenance History
+          </h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">
+            ${myTickets.length > 0 ? myTickets.map(t => ticketCard(t)).join('') : '<p class="text-slate-500 col-span-2 text-center py-12">No issues reported yet. Click "Report New Issue" to get started.</p>'}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ─── MANAGER VIEW ───
+    function renderManager() {
+      const pending = state.tickets.filter(t => t.status === 'Pending');
+      const inProgress = state.tickets.filter(t => t.status === 'In Progress' || t.status === 'Dispatched' || t.status === 'Negotiating');
+      const completed = state.tickets.filter(t => t.status === 'Completed');
+      return `
+      <div class="anim-fade-in">
+        <div class="glass rounded-2xl p-5 sm:p-6 gradient-border mb-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold mb-1">Manager Dashboard</h2>
+              <p class="text-sm text-slate-400">Monitor and dispatch repair operations across all locations</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="glass rounded-xl p-4 text-center"><div class="text-3xl font-extrabold text-amber-400">${pending.length}</div><div class="text-xs text-slate-400 mt-1">Pending Alerts</div></div>
+            <div class="glass rounded-xl p-4 text-center"><div class="text-3xl font-extrabold text-blue-400">${inProgress.length}</div><div class="text-xs text-slate-400 mt-1">In Progress</div></div>
+            <div class="glass rounded-xl p-4 text-center col-span-2 sm:col-span-1"><div class="text-3xl font-extrabold text-green-400">${completed.length}</div><div class="text-xs text-slate-400 mt-1">Completed</div></div>
+          </div>
+        </div>
+        ${pending.length > 0 ? `
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Pending Repair Alerts <span class="text-xs font-normal text-amber-400">(Action Required)</span>
+          </h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">${pending.map(t => managerPendingCard(t)).join('')}</div>
+        </div>` : ''}
+        ${inProgress.length > 0 ? `
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            In Progress
+          </h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">${inProgress.map(t => managerProgressCard(t)).join('')}</div>
+        </div>` : ''}
+        ${completed.length > 0 ? `
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Completed / History
+          </h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">${completed.map(t => ticketCard(t)).join('')}</div>
+        </div>` : ''}
+        ${pending.length === 0 && inProgress.length === 0 && completed.length === 0 ? '<p class="text-slate-500 text-center py-12">No tickets yet.</p>' : ''}
+      </div>`;
+    }
+
+    function managerPendingCard(t) {
+      return `
+      <div class="glass rounded-2xl overflow-hidden gradient-border relative">
+        <div class="absolute top-0 left-0 right-0 h-1" style="background:linear-gradient(90deg,#f59e0b,#ef4444)"></div>
+        <div class="absolute top-3 right-3">
+          <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)">Action Needed</span>
+        </div>
+        <div class="p-4">
+          <div class="flex gap-3 mb-3">
+            <div class="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">${t.photo}</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-sm truncate">${t.asset}</h4>
+              <p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${t.location}</p>
+              <div class="mt-1">${statusBadge(t.status)}</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2 line-clamp-2">${t.issue}</p>
+          <div class="flex items-center justify-between text-[10px] text-slate-500 mb-3">
+            <span>By ${t.reporter} • ${t.method}</span>
+            <span>${timeAgo(t.time)}</span>
+          </div>
+          ${t.aiConfidence ? `<div class="flex items-center gap-2 mb-3 text-xs"><span class="text-slate-500">AI Match:</span><span class="font-bold text-accent-400">${t.aiConfidence}%</span></div>` : ''}
+          <button onclick="showDispatchModal('${t.id}')" class="btn-primary w-full py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            Dispatch
+          </button>
+        </div>
+      </div>`;
+    }
+
+    function managerProgressCard(t) {
+      const isNegotiating = t.status === 'Negotiating';
+      return `
+      <div class="glass rounded-2xl overflow-hidden gradient-border relative">
+        <div class="absolute top-0 left-0 right-0 h-1" style="background:linear-gradient(90deg,#06b6d4,#3b82f6)"></div>
+        <div class="p-4">
+          <div class="flex gap-3 mb-3">
+            <div class="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">${t.photo}</div>
+            <div class="min-w-0 flex-1">
+              <h4 class="font-semibold text-sm truncate">${t.asset}</h4>
+              <p class="text-xs text-slate-500 mt-0.5">${t.location}</p>
+              <div class="mt-1">${statusBadge(t.status)}</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2 line-clamp-2">${t.issue}</p>
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              ${isNegotiating ? `<span class="text-xs text-violet-400 font-medium">Awaiting agreement…</span>` : `
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-red-500 anim-pulse-ring"></div>
+                <span class="text-xs font-mono text-red-400" data-timer-start="${t.timerStart}">${formatTimer(Math.floor((Date.now() - t.timerStart) / 1000))}</span>
+                <span class="text-xs text-slate-500">elapsed</span>
+              </div>`}
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-slate-400">
+              ${t.repairerType === 'inhouse' ? '<span class="text-green-400 font-medium">FREE</span>' : t.priceAgreed ? `<span class="text-amber-400 font-semibold">$${t.price}</span>` : ''}
+              <span>•</span>
+              <span>${t.repairerName || ''}</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="showChatModal('${t.id}')" class="btn-ghost flex-1 py-2 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Chat
+            </button>
+            ${isNegotiating ? `<button onclick="showChatModal('${t.id}')" class="btn-ghost px-3 py-2 rounded-lg text-xs font-medium text-violet-300">Negotiate</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ─── IN-HOUSE TECH VIEW ───
+    function renderInHouseTech() {
+      const myJobs = state.tickets.filter(t => t.repairerType === 'inhouse' && t.status !== 'Completed' && t.status !== 'Pending');
+      const completed = state.tickets.filter(t => t.repairerType === 'inhouse' && t.status === 'Completed');
+      return `
+      <div class="anim-fade-in">
+        <div class="glass rounded-2xl p-5 sm:p-6 gradient-border mb-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold mb-1">In-House Technician</h2>
+              <p class="text-sm text-slate-400">Your active repair assignments — all services are 100% free</p>
+            </div>
+            <div class="glass rounded-xl px-5 py-3 text-center"><div class="text-3xl font-extrabold text-accent-400">${myJobs.length}</div><div class="text-xs text-slate-400 mt-1">Active Jobs</div></div>
+          </div>
+        </div>
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-4">Active Jobs</h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">
+            ${myJobs.length > 0 ? myJobs.map(t => inHouseJobCard(t)).join('') : '<p class="text-slate-500 col-span-2 text-center py-12">No active jobs assigned to you.</p>'}
+          </div>
+        </div>
+        ${completed.length > 0 ? `
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Completed Jobs</h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">${completed.map(t => ticketCard(t)).join('')}</div>
+        </div>` : ''}
+      </div>`;
+    }
+
+    function inHouseJobCard(t) {
+      return `
+      <div class="glass rounded-2xl overflow-hidden gradient-border relative">
+        <div class="absolute top-0 left-0 right-0 h-1" style="background:linear-gradient(90deg,#06b6d4,#3b82f6)"></div>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-3">
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)">100% FREE ($0)</span>
+            <div class="flex items-center gap-1.5">
+              <div class="w-2 h-2 rounded-full bg-red-500 anim-pulse-ring"></div>
+              <span class="text-xs font-mono text-red-400" data-timer-start="${t.timerStart}">${formatTimer(Math.floor((Date.now() - t.timerStart) / 1000))}</span>
+            </div>
+          </div>
+          <div class="flex gap-3 mb-3">
+            <div class="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">${t.photo}</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-sm truncate">${t.asset}</h4>
+              <p class="text-xs text-slate-500 mt-0.5">${t.location}</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-3 line-clamp-2">${t.issue}</p>
+          <div class="flex gap-2">
+            <button onclick="showChatModal('${t.id}')" class="btn-ghost flex-1 py-2.5 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Reply to Manager
+            </button>
+            <button onclick="completeJob('${t.id}')" class="btn-primary flex-1 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Upload Proof &amp; Complete
+            </button>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ─── OUTSIDE CONTRACTOR VIEW ───
+    function renderContractor() {
+      const myJobs = state.tickets.filter(t => t.repairerType === 'contractor' && t.status !== 'Completed');
+      const completed = state.tickets.filter(t => t.repairerType === 'contractor' && t.status === 'Completed');
+      return `
+      <div class="anim-fade-in">
+        <div class="glass rounded-2xl p-5 sm:p-6 gradient-border mb-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold mb-1">Outside Contractor</h2>
+              <p class="text-sm text-slate-400">Manage your contracted repair jobs and invoices</p>
+            </div>
+            <div class="glass rounded-xl px-5 py-3 text-center"><div class="text-3xl font-extrabold text-amber-400">${myJobs.length}</div><div class="text-xs text-slate-400 mt-1">Active Contracts</div></div>
+          </div>
+        </div>
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-4">Active Contracts</h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">
+            ${myJobs.length > 0 ? myJobs.map(t => contractorJobCard(t)).join('') : '<p class="text-slate-500 col-span-2 text-center py-12">No active contracts assigned to you.</p>'}
+          </div>
+        </div>
+        ${completed.length > 0 ? `
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Completed Contracts</h3>
+          <div class="grid sm:grid-cols-2 gap-4 stagger">${completed.map(t => ticketCard(t)).join('')}</div>
+        </div>` : ''}
+      </div>`;
+    }
+
+    function contractorJobCard(t) {
+      const isNegotiating = t.status === 'Negotiating';
+      const isInProgress = t.status === 'In Progress';
+      const accepted = t.accepted;
+      return `
+      <div class="glass rounded-2xl overflow-hidden gradient-border relative">
+        <div class="absolute top-0 left-0 right-0 h-1" style="background:linear-gradient(90deg,#f59e0b,#ef4444)"></div>
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-3">
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold" style="background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)">Paid Service</span>
+            ${isInProgress ? `<div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full bg-red-500 anim-pulse-ring"></div><span class="text-xs font-mono text-red-400" data-timer-start="${t.timerStart}">${formatTimer(Math.floor((Date.now() - t.timerStart) / 1000))}</span></div>` : statusBadge(t.status)}
+          </div>
+          <div class="flex gap-3 mb-3">
+            <div class="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">${t.photo}</div>
+            <div class="min-w-0">
+              <h4 class="font-semibold text-sm truncate">${t.asset}</h4>
+              <p class="text-xs text-slate-500 mt-0.5">${t.location}</p>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2 line-clamp-2">${t.issue}</p>
+          ${t.priceAgreed ? `<div class="flex items-center justify-between mb-3 text-xs"><span class="text-slate-500">Agreed Price:</span><span class="font-bold text-amber-400">$${t.price}</span></div>` : ''}
+          <div class="flex flex-wrap gap-2">
+            <button onclick="showChatModal('${t.id}')" class="btn-ghost flex-1 py-2.5 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 min-w-[120px]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              ${isNegotiating ? 'Negotiate &amp; Chat' : 'Chat'}
+            </button>
+            ${isNegotiating && !accepted ? `
+            <button onclick="acceptContract('${t.id}')" class="px-3 py-2.5 rounded-lg text-xs font-semibold" style="background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)">Accept</button>
+            <button onclick="declineContract('${t.id}')" class="px-3 py-2.5 rounded-lg text-xs font-semibold" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)">Decline</button>
+            ` : ''}
+            ${isInProgress ? `<button onclick="finishContract('${t.id}')" class="btn-primary flex-1 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 min-w-[120px]"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Finish &amp; Invoice</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ─── SHARED TICKET CARD ───
+    function ticketCard(t) {
+      return `
+      <div class="glass rounded-2xl overflow-hidden gradient-border">
+        <div class="p-4">
+          <div class="flex gap-3 mb-3">
+            <div class="w-20 h-16 rounded-lg overflow-hidden flex-shrink-0">${t.proofPhoto || t.photo}</div>
+            <div class="min-w-0 flex-1">
+              <h4 class="font-semibold text-sm truncate">${t.asset}</h4>
+              <p class="text-xs text-slate-500 mt-0.5">${t.location}</p>
+              <div class="mt-1.5">${statusBadge(t.status)}</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2 line-clamp-2">${t.issue}</p>
+          <div class="flex items-center justify-between text-[10px] text-slate-500 mb-2">
+            <span class="flex items-center gap-1">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              ${t.method}
+            </span>
+            <span>${timeAgo(t.time)}</span>
+          </div>
+          ${t.repairerName ? `<div class="text-xs text-slate-400 mb-2">Repairer: <span class="text-slate-300">${t.repairerName}</span>${t.repairerType === 'inhouse' ? ' <span class="text-green-400">(Free)</span>' : t.price ? ` <span class="text-amber-400">($${t.price})</span>` : ''}</div>` : ''}
+          ${t.completedAt ? `<div class="text-xs text-green-400 mb-2 flex items-center gap-1"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Completed ${timeAgo(t.completedAt)}</div>` : ''}
+          ${t.status === 'In Progress' || t.status === 'Dispatched' ? `<button onclick="showChatModal('${t.id}')" class="btn-ghost w-full py-2 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</button>` : ''}
+        </div>
+      </div>`;
+    }
+
+    // ─── MODALS ───
+    function showModal(content) {
+      const m = document.getElementById('modal-root');
+      m.innerHTML = `<div class="w-full max-h-[90vh] overflow-y-auto anim-fade-scale">${content}</div>`;
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function hideModal() {
+      const m = document.getElementById('modal-root');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+      m.innerHTML = '';
+    }
+
+    function showRoleModal() {
+      const roles = [
+        { id: 'staff', title: 'Staff', desc: 'Report issues and track repairs', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>', seed: 0 },
+        { id: 'manager', title: 'Manager', desc: 'Dispatch and oversee all repairs', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>', seed: 1 },
+        { id: 'inhouse', title: 'In-House Technician', desc: 'Free repair jobs assigned to you', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>', seed: 2 },
+        { id: 'contractor', title: 'Outside Contractor', desc: 'Paid contracts with negotiation', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>', seed: 3 },
+      ];
+      showModal(`
+        <div class="glass-strong rounded-2xl p-6 max-w-md mx-auto">
+          <div class="text-center mb-6">
+            ${svgBolt(40)}
+            <h2 class="text-xl font-bold mt-2">Select Your Role</h2>
+            <p class="text-sm text-slate-400 mt-1">Choose how you want to use FixFlow</p>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3 stagger">
+            ${roles.map(r => `
+              <button onclick="selectRole('${r.id}')" class="glass rounded-xl p-4 text-left gradient-border hover:neon-glow transition-all duration-300 group">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style="background:linear-gradient(135deg,rgba(6,182,212,0.15),rgba(59,130,246,0.1))">
+                  <span class="text-accent-400">${r.icon}</span>
+                </div>
+                <h3 class="font-semibold text-sm mb-1">${r.title}</h3>
+                <p class="text-xs text-slate-500">${r.desc}</p>
+              </button>
+            `).join('')}
+          </div>
+          ${state.role ? `<button onclick="hideModal()" class="mt-4 w-full btn-ghost py-2.5 rounded-xl text-sm font-medium">Cancel</button>` : `<p class="text-center text-xs text-slate-600 mt-4">You must pick a role to continue</p>`}
+        </div>
+      `);
+    }
+
+    function selectRole(role) {
+      state.role = role;
+      state.page = 'app';
+      hideModal();
+      render();
+      showToast(`Switched to ${role === 'staff' ? 'Staff' : role === 'manager' ? 'Manager' : role === 'inhouse' ? 'In-House Technician' : 'Outside Contractor'} view`, 'info');
+    }
+
+    function goHome() {
+      state.page = 'landing';
+      hideModal();
+      render();
+      window.scrollTo(0, 0);
+    }
+
+    // ─── REPORT MODAL ───
+    function showReportModal() {
+
+      renderReportModal();
+    }
+
+    function renderReportModal() {
+      showModal(`
+        <div class="glass-strong rounded-2xl p-5 sm:p-6 max-w-md mx-auto">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-lg font-bold">Report New Issue</h2>
+            <button onclick="hideModal()" class="text-slate-500 hover:text-slate-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 mb-2 block">Upload or snap a photo of the equipment</label>
+            <div id="ai-photo-area" class="border-2 border-dashed border-accent-500/20 rounded-xl p-6 text-center cursor-pointer hover:border-accent-500/40 transition-colors" onclick="document.getElementById('ai-file-input').click()">
+              <div id="ai-photo-preview" class="hidden rounded-lg overflow-hidden mb-3"></div>
+              <div id="ai-photo-placeholder">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="1.5" class="mx-auto mb-2 opacity-50"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <p class="text-sm text-slate-400">Click to upload or take a photo</p>
+                <p class="text-xs text-slate-600 mt-1">AI will identify the equipment automatically</p>
+              </div>
+              <input type="file" accept="image/*" id="ai-file-input" class="hidden" onchange="handleAIPhoto(event)" />
+            </div>
+            <label class="text-xs text-slate-400 mb-2 block mt-4">Describe the problem</label>
+            <textarea id="ai-issue-text" rows="3" placeholder="e.g. Machine won't heat up, making unusual noise..."></textarea>
+            <button onclick="submitAIReport()" class="btn-primary w-full py-3 rounded-xl font-semibold mt-4 flex items-center justify-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              Submit AI Report Now
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+    let aiPhotoData = null;
+    function handleAIPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        aiPhotoData = e.target.result;
+        const preview = document.getElementById('ai-photo-preview');
+        const placeholder = document.getElementById('ai-photo-placeholder');
+        if (preview && placeholder) {
+          preview.innerHTML = `<img src="${aiPhotoData}" class="w-full h-40 object-cover" alt="Equipment photo"/>`;
+          preview.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function submitAIReport() {
+      const issue = document.getElementById('ai-issue-text')?.value.trim();
+      if (!issue) { showToast('Please describe the problem first', 'warning'); return; }
+      const photo = aiPhotoData || svgReportPhoto(Math.floor(Math.random() * 4));
+      const assets = [
+        { name: 'Espresso Machine #07', loc: 'Café Aurelia, BKK1' },
+        { name: 'Commercial Blender #02', loc: 'Smoothie Bar, Toul Kork' },
+        { name: 'Refrigerator Unit #03', loc: 'Kitchen, Daun Penh' },
+        { name: 'Dishwasher #01', loc: 'Café Aurelia, BKK1' },
+      ];
+      const a = assets[Math.floor(Math.random() * assets.length)];
+      const conf = (95 + Math.random() * 4.5).toFixed(1);
+      state.tickets.unshift({
+        id: 'FF-' + String(2400 + state.tickets.length + 1).padStart(4, '0'),
+        asset: a.name, assetCode: a.name.split('#')[1] ? a.name.split('#')[1].trim() : 'XX-00',
+        location: a.loc, issue, method: 'AI Photo', photo,
+        time: Date.now(), status: 'Pending', reporter: 'You', aiConfidence: parseFloat(conf),
+        repairerType: null, repairerId: null, repairerName: null, timerStart: null,
+        chat: [], price: null, priceOffered: null, priceAgreed: false, accepted: false,
+        proofPhoto: null, completedAt: null,
+      });
+      aiPhotoData = null;
+      hideModal();
+      render();
+      showToast('AI report submitted — equipment identified at ' + conf + '% confidence', 'success');
+    }
+
+    // ─── DISPATCH MODAL ───
+    function showDispatchModal(ticketId) {
+      state.dispatchStep = 1;
+      state.dispatchTicketId = ticketId;
+      state.dispatchType = null;
+      state.selectedCompany = null;
+      renderDispatchModal();
+    }
+
+    function renderDispatchModal() {
+      const t = state.tickets.find(x => x.id === state.dispatchTicketId);
+      if (!t) return hideModal();
+      if (state.dispatchStep === 1) {
+        showModal(`
+          <div class="glass-strong rounded-2xl p-5 sm:p-6 max-w-md mx-auto">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-bold">Dispatch Repair</h2>
+              <button onclick="hideModal()" class="text-slate-500 hover:text-slate-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="glass rounded-xl p-3 mb-4 flex gap-3">
+              <div class="w-16 h-14 rounded-lg overflow-hidden flex-shrink-0">${t.photo}</div>
+              <div class="min-w-0">
+                <h4 class="font-semibold text-sm truncate">${t.asset}</h4>
+                <p class="text-xs text-slate-500">${t.location}</p>
+                <p class="text-xs text-slate-400 mt-1 line-clamp-1">${t.issue}</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs mb-4">
+              <div class="glass rounded-lg p-2.5"><div class="text-slate-500">Reporter</div><div class="font-medium text-slate-300">${t.reporter}</div></div>
+              <div class="glass rounded-lg p-2.5"><div class="text-slate-500">Method</div><div class="font-medium text-slate-300">${t.method}</div></div>
+              ${t.aiConfidence ? `<div class="glass rounded-lg p-2.5 col-span-2"><div class="text-slate-500">AI Confidence</div><div class="font-bold text-accent-400">${t.aiConfidence}%</div></div>` : ''}
+            </div>
+            <div class="mb-4">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff">1</div>
+                <span class="text-sm font-semibold">Choose Repairer Type</span>
+              </div>
+              <div class="space-y-3">
+                <button onclick="dispatchStep2('inhouse')" class="glass rounded-xl p-4 w-full text-left gradient-border hover:neon-glow transition-all group">
+                  <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:rgba(16,185,129,0.15)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      </div>
+                      <div>
+                        <h4 class="font-semibold text-sm">In-House Staff</h4>
+                        <p class="text-xs text-green-400 font-medium">100% FREE ($0)</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs text-slate-400">${inHouseStaff.filter(s => s.status === 'Available').length} available</div>
+                      <div class="text-xs text-slate-500">${inHouseStaff.length} total</div>
+                    </div>
+                  </div>
+                </button>
+                <button onclick="dispatchStep2('contractor')" class="glass rounded-xl p-4 w-full text-left gradient-border hover:neon-glow transition-all group">
+                  <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:rgba(245,158,11,0.15)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                      </div>
+                      <div>
+                        <h4 class="font-semibold text-sm">Outside Contractor / Company</h4>
+                        <p class="text-xs text-amber-400 font-medium">Paid — price negotiation</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs text-slate-400">${contractors.length} companies</div>
+                      <div class="text-xs text-slate-500">Phnom Penh areas</div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        `);
+      } else if (state.dispatchStep === 2) {
+        if (state.dispatchType === 'inhouse') {
+          showModal(`
+            <div class="glass-strong rounded-2xl p-5 sm:p-6 max-w-md mx-auto">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold">Select In-House Technician</h2>
+                <button onclick="hideModal()" class="text-slate-500 hover:text-slate-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+              </div>
+              <div class="flex items-center gap-2 mb-4 text-xs">
+                <button onclick="dispatchStep1()" class="text-accent-400 hover:underline">← Back</button>
+                <span class="text-slate-600">|</span>
+                <span class="text-green-400 font-medium">In-House • 100% FREE ($0)</span>
+              </div>
+              <div class="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
+                ${inHouseStaff.map(s => `
+                  <button onclick="dispatchToInHouse('${state.dispatchTicketId}', '${s.id}')" ${s.status === 'Busy' ? 'disabled' : ''} class="glass rounded-xl p-3 w-full text-left gradient-border ${s.status === 'Available' ? 'hover:neon-glow' : 'opacity-50 cursor-not-allowed'} transition-all">
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">${svgAvatar(s.seed, s.name)}</div>
+                      <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between">
+                          <h4 class="font-semibold text-sm truncate">${s.name}</h4>
+                          <span class="text-xs font-medium ${s.status === 'Available' ? 'text-green-400' : 'text-red-400'}">${s.status}</span>
+                        </div>
+                        <p class="text-xs text-slate-500">${s.role}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                          ${stars(s.rating)}
+                          <span class="text-xs text-slate-500">•</span>
+                          <span class="text-xs text-slate-500">${s.skills.slice(0, 2).join(', ')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `);
+        } else {
+          showModal(`
+            <div class="glass-strong rounded-2xl p-5 sm:p-6 max-w-md mx-auto">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold">Select Outside Contractor</h2>
+                <button onclick="hideModal()" class="text-slate-500 hover:text-slate-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+              </div>
+              <div class="flex items-center gap-2 mb-4 text-xs">
+                <button onclick="dispatchStep1()" class="text-accent-400 hover:underline">← Back</button>
+                <span class="text-slate-600">|</span>
+                <span class="text-amber-400 font-medium">Outside Contractor • Paid</span>
+              </div>
+              <div class="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
+                ${contractors.map(c => `
+                  <div class="glass rounded-xl p-3 gradient-border hover:neon-glow transition-all">
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">${svgLogo(c.seed, c.name)}</div>
+                      <div class="min-w-0 flex-1">
+                        <div class="flex items-center justify-between gap-2">
+                          <h4 class="font-semibold text-sm truncate">${c.name}</h4>
+                          <span class="text-xs text-accent-300 font-medium flex-shrink-0">${c.area}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-0.5 truncate">${c.repairs}</p>
+                        <div class="flex items-center gap-2 mt-1 flex-wrap">
+                          ${stars(c.rating)}
+                          <span class="text-xs text-slate-500">•</span>
+                          <span class="text-xs text-amber-400">${c.priceRange}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex gap-2 mt-2.5">
+                      <button onclick="showCompanyDetail('${c.id}', '${state.dispatchTicketId}')" class="btn-ghost flex-1 py-1.5 rounded-lg text-xs font-medium">View Details</button>
+                      <button onclick="dispatchToContractor('${state.dispatchTicketId}', '${c.id}')" class="btn-primary flex-1 py-1.5 rounded-lg text-xs font-semibold">Dispatch</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `);
+        }
+      }
+    }
+
+    function dispatchStep1() { state.dispatchStep = 1; renderDispatchModal(); }
+    function dispatchStep2(type) { state.dispatchStep = 2; state.dispatchType = type; renderDispatchModal(); }
+
+    function showCompanyDetail(companyId, ticketId) {
+      const c = contractors.find(x => x.id === companyId);
+      if (!c) return;
+      showModal(`
+        <div class="glass-strong rounded-2xl p-5 sm:p-6 max-w-md mx-auto max-h-[85vh] overflow-y-auto">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold">Company Details</h2>
+            <button onclick="dispatchStep2('contractor')" class="text-slate-500 hover:text-slate-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">${svgLogo(c.seed, c.name)}</div>
+            <div>
+              <h3 class="font-bold">${c.name}</h3>
+              <div class="flex items-center gap-2 mt-1">${stars(c.rating)}<span class="text-xs text-slate-500">(${c.reviews} reviews)</span></div>
+              <p class="text-xs text-accent-300 mt-0.5">${c.area}, Phnom Penh</p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs mb-4">
+            <div class="glass rounded-lg p-3"><div class="text-slate-500 mb-0.5">Price Range</div><div class="font-semibold text-amber-400">${c.priceRange}</div></div>
+            <div class="glass rounded-lg p-3"><div class="text-slate-500 mb-0.5">Contact</div><div class="font-semibold text-slate-300">${c.contact}</div></div>
+            <div class="glass rounded-lg p-3"><div class="text-slate-500 mb-0.5">Hours</div><div class="font-semibold text-slate-300">${c.hours}</div></div>
+            <div class="glass rounded-lg p-3"><div class="text-slate-500 mb-0.5">Location</div><div class="font-semibold text-slate-300">${c.area}</div></div>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold mb-2">Services</h4>
+            <p class="text-xs text-slate-400">${c.repairs}</p>
+          </div>
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold mb-2">Reviews</h4>
+            <div class="space-y-2">
+              ${c.reviewsData.map(r => `
+                <div class="glass rounded-lg p-3">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-medium text-slate-300">${r.user}</span>
+                    <span class="flex gap-0.5">${Array(r.stars).fill(starIcon()).join('')}</span>
+                  </div>
+                  <p class="text-xs text-slate-400">${r.text}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <button onclick="dispatchToContractor('${ticketId}', '${c.id}')" class="btn-primary w-full py-3 rounded-xl font-semibold flex items-center justify-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            Dispatch to ${c.name}
+          </button>
+        </div>
+      `);
+    }
+
+    function dispatchToInHouse(ticketId, staffId) {
+      const t = state.tickets.find(x => x.id === ticketId);
+      const s = inHouseStaff.find(x => x.id === staffId);
+      if (!t || !s) return;
+      t.status = 'In Progress';
+      t.repairerType = 'inhouse';
+      t.repairerId = staffId;
+      t.repairerName = s.name;
+      t.timerStart = Date.now();
+      s.status = 'Busy';
+      hideModal();
+      render();
+      showToast(`Dispatched to ${s.name} (In-House, FREE)`, 'success');
+    }
+
+    function dispatchToContractor(ticketId, contractorId) {
+      const t = state.tickets.find(x => x.id === ticketId);
+      const c = contractors.find(x => x.id === contractorId);
+      if (!t || !c) return;
+      t.status = 'Negotiating';
+      t.repairerType = 'contractor';
+      t.repairerId = contractorId;
+      t.repairerName = c.name;
+      t.chat = [];
+      t.price = null;
+      t.priceAgreed = false;
+      t.accepted = false;
+      hideModal();
+      render();
+      showToast(`Dispatched to ${c.name} — negotiate price to begin`, 'info');
+      setTimeout(() => showChatModal(ticketId), 300);
+    }
+
+    // ─── CHAT MODAL ───
+    function showChatModal(ticketId) {
+      state.activeChat = ticketId;
+      renderChatModal();
+    }
+
+    function renderChatModal() {
+      const t = state.tickets.find(x => x.id === state.activeChat);
+      if (!t) return hideModal();
+      const isContractorJob = t.repairerType === 'contractor';
+      const isManager = state.role === 'manager';
+      const isContractor = state.role === 'contractor';
+      const isTech = state.role === 'inhouse';
+      const isStaff = state.role === 'staff';
+      const mySide = isManager ? 'manager' : isContractor ? 'contractor' : isTech ? 'tech' : 'staff';
+      const otherName = t.repairerType === 'inhouse' ? t.repairerName : t.repairerName || 'Manager';
+      const showPriceNeg = isContractorJob && (isManager || isContractor);
+      showModal(`
+        <div class="glass-strong rounded-2xl max-w-md mx-auto flex flex-col" style="max-height:85vh">
+          <div class="p-4 border-b border-accent-500/10 flex items-center justify-between">
+            <div class="flex items-center gap-2 min-w-0">
+              <div class="w-9 h-9 rounded-full overflow-hidden flex-shrink-0">${t.repairerType === 'inhouse' ? svgAvatar(inHouseStaff.find(s => s.id === t.repairerId)?.seed || 0, t.repairerName) : svgLogo(contractors.find(c => c.id === t.repairerId)?.seed || 0, t.repairerName)}</div>
+              <div class="min-w-0">
+                <h3 class="font-semibold text-sm truncate">${t.repairerName || 'Chat'}</h3>
+                <p class="text-xs text-slate-500">${t.asset}</p>
+              </div>
+            </div>
+            <button onclick="hideModal()" class="text-slate-500 hover:text-slate-300 flex-shrink-0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          </div>
+          ${showPriceNeg && !t.priceAgreed ? `
+          <div class="px-4 py-2.5 border-b border-accent-500/10 glass">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-violet-300 font-medium">Price Negotiation</span>
+              <span class="text-slate-400">${t.priceOffered ? 'Offered: $' + t.priceOffered : 'No offer yet'}</span>
+            </div>
+          </div>` : ''}
+          <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 min-h-[200px]">
+            ${t.chat.length === 0 ? `<p class="text-center text-xs text-slate-600 py-8">No messages yet. Start the conversation.</p>` : t.chat.map(m => chatMessage(m, mySide)).join('')}
+          </div>
+          ${showPriceNeg && isManager && !t.priceAgreed ? `
+          <div class="p-3 border-t border-accent-500/10">
+            <div class="flex gap-2 mb-2">
+              <input type="number" id="price-input" placeholder="Offer price ($)" min="0" />
+              <button onclick="proposePrice('${t.id}')" class="btn-primary px-4 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap">Propose</button>
+            </div>
+          </div>` : ''}
+          ${showPriceNeg && isContractor && !t.priceAgreed ? `
+          <div class="p-3 border-t border-accent-500/10">
+            <div class="flex gap-2 mb-2">
+              <input type="number" id="counter-price-input" placeholder="Counter-offer ($)" min="0" />
+              <button onclick="counterPrice('${t.id}')" class="btn-ghost px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap">Counter</button>
+            </div>
+          </div>` : ''}
+          <div class="p-3 border-t border-accent-500/10">
+            <div class="flex gap-2">
+              <input type="text" id="chat-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChatMessage('${t.id}')" />
+              <button onclick="sendChatMessage('${t.id}')" class="btn-primary px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-1.5 flex-shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `);
+      setTimeout(() => { const el = document.getElementById('chat-messages'); if (el) el.scrollTop = el.scrollHeight; }, 50);
+    }
+
+    function chatMessage(m, mySide) {
+      const isMe = m.from === mySide || (mySide === 'staff' && m.from === 'staff');
+      const side = isMe ? 'justify-end' : 'justify-start';
+      const bg = m.type === 'price' ? 'rgba(245,158,11,0.15)' : m.type === 'counter' ? 'rgba(168,85,247,0.15)' : m.type === 'accept' ? 'rgba(16,185,129,0.15)' : m.type === 'decline' ? 'rgba(239,68,68,0.15)' : isMe ? 'rgba(6,182,212,0.15)' : 'rgba(59,130,246,0.1)';
+      const border = m.type === 'price' ? 'rgba(245,158,11,0.3)' : m.type === 'counter' ? 'rgba(168,85,247,0.3)' : m.type === 'accept' ? 'rgba(16,185,129,0.3)' : m.type === 'decline' ? 'rgba(239,68,68,0.3)' : isMe ? 'rgba(6,182,212,0.2)' : 'rgba(59,130,246,0.15)';
+      return `<div class="flex ${side}"><div class="max-w-[75%] rounded-xl px-3 py-2" style="background:${bg};border:1px solid ${border}">
+        ${m.type === 'price' ? `<div class="text-xs text-amber-400 font-semibold mb-0.5">Price Offered</div><div class="text-sm font-bold text-amber-300">$${m.amount}</div>` : m.type === 'counter' ? `<div class="text-xs text-violet-400 font-semibold mb-0.5">Counter-Offer</div><div class="text-sm font-bold text-violet-300">$${m.amount}</div>` : m.type === 'accept' ? `<div class="text-sm text-green-400 font-semibold">Accepted — Price agreed at $${m.amount}</div>` : m.type === 'decline' ? `<div class="text-sm text-red-400 font-semibold">Job Declined</div>` : `<p class="text-sm text-slate-200">${m.text}</p>`}
+        <div class="text-[10px] text-slate-500 mt-1 text-right">${timeAgo(m.time)}</div>
+      </div></div>`;
+    }
+
+    function sendChatMessage(ticketId) {
+      const input = document.getElementById('chat-input');
+      if (!input || !input.value.trim()) return;
+      const t = state.tickets.find(x => x.id === ticketId);
+      if (!t) return;
+      const from = state.role === 'manager' ? 'manager' : state.role === 'contractor' ? 'contractor' : state.role === 'inhouse' ? 'tech' : 'staff';
+      t.chat.push({ from, text: input.value.trim(), type: 'text', time: Date.now() });
+      input.value = '';
+      renderChatModal();
+
+    }
+
+    function proposePrice(ticketId) {
+      const input = document.getElementById('price-input');
+      if (!input || !input.value) { showToast('Enter a price first', 'warning'); return; }
+      const amount = parseFloat(input.value);
+      const t = state.tickets.find(x => x.id === ticketId);
+      if (!t) return;
+      t.priceOffered = amount;
+      t.chat.push({ from: 'manager', type: 'price', amount, time: Date.now() });
+      renderChatModal();
+
+    }
+
+    function counterPrice(ticketId) {
+      const input = document.getElementById('counter-price-input');
+      if (!input || !input.value) { showToast('Enter a counter-offer', 'warning'); return; }
+      const amount = parseFloat(input.value);
+      const t = state.tickets.find(x => x.id === ticketId);
+      if (!t) return;
+      t.chat.push({ from: 'contractor', type: 'counter', amount, time: Date.now() });
+      renderChatModal();
+
+    }
+
+    function acceptContract(ticketId) {
+      const t = state.tickets.find(x => x.id === ticketId);
+      if (!t) return;
+      if (!t.priceOffered) { showToast('No price offer to accept', 'warning'); return; }
+      t.price = t.priceOffered;
+      t.priceAgreed = true;
+      t.accepted = true;
+      t.status = 'In Progress';
+      t.timerStart = Date.now();
+      t.chat.push({ from: 'contractor', type: 'accept', amount: t.priceOffered, time: Date.now() });
+      render();
+      showToast(`Job accepted at $${t.price} — repair started!`, 'success');
+    }
+
+    function declineContract(ticketId) {
+      const t = state.tickets.find(x => x.id === ticketId);
+      if (!t) return;
+      t.chat.push({ from: 'contractor', type: 'decline', time: Date.now() });
+      t.status = 'Pending';
+      t.repairerType = null;
+      t.repairerId = null;
+      t.repairerName = null;
+      render();
+      showToast('Job declined — returned to pending queue', 'warning');
+    }
+
+    function completeJob(ticketId) {
+      const t = state.tickets.find(x => x.id === ticketId);
+      if (!t) return;
+      t.status = 'Completed';
+      t.completedAt = Date.now();
+      t.proofPhoto = svgReportPhoto(Math.floor(Math.random() * 4));
+      const s = inHouseStaff.find(x => x.id === t.repairerId);
+      if (s) s.status = 'Available';
+      launchConfetti();
+      render();
+      showToast('Repair completed and saved to history!', 'success');
+    }
+
+    function finishContract(ticketId) {
+      const t = state.tickets.find(x => x.id === ticketId);
+      if (!t) return;
+      t.status = 'Completed';
+      t.completedAt = Date.now();
+      t.proofPhoto = svgReportPhoto(Math.floor(Math.random() * 4));
+      launchConfetti();
+      render();
+      showToast('Contract finished — invoice submitted for $' + t.price, 'success');
+    }
+
+    // ─── TIMER SYSTEM ───
+    function startTimerSystem() {
+      setInterval(() => {
+        document.querySelectorAll('[data-timer-start]').forEach(el => {
+          const start = parseInt(el.dataset.timerStart);
+          if (start) el.textContent = formatTimer(Math.floor((Date.now() - start) / 1000));
+        });
+      }, 1000);
+    }
+
+    // ─── INIT ───
+    function init() {
+      initData();
+      render();
+      startTimerSystem();
+    }
+
+    // Close modal on backdrop click
+    document.addEventListener('click', (e) => {
+      const m = document.getElementById('modal-root');
+      if (e.target === m) hideModal();
+    });
+
+    // Escape key closes modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hideModal();
+    });
+
+    init();
+    </script>
+  </body>
+</html>
